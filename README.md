@@ -1,6 +1,6 @@
 # Options Helper
 
-A library mod for **X4: Foundations** that provides reusable MD (Mission Director) script libraries for building [SirNukes Mod Support APIs](https://www.nexusmods.com/x4foundations/mods/503) options menus.
+A library mod for **X4: Foundations** that provides reusable MD (Mission Director) script libraries for building `SirNukes Mod Support APIs` options menus.
 
 Instead of repeating the widget-construction boilerplate in every mod, declare your menu sections using the `Options_Helper` libraries and wire up a single handler cue per widget type.
 
