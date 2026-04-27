@@ -1,0 +1,293 @@
+[size=140][u]Options Helper[/u][/size]
+
+A library mod for [b]X4: Foundations[/b] that provides reusable MD (Mission Director) script libraries for building [b]SirNukes Mod Support APIs[/b] options menus.
+
+Instead of repeating the widget-construction boilerplate in every mod, declare your menu sections using the [b]Options_Helper[/b] libraries and wire up a single handler cue per widget type.
+
+[size=130][u]Requirements[/u][/size]
+[list]
+[*] [b]X4: Foundations[/b] version 8.00 or newer
+[*] [b]SirNukes Mod Support APIs[/b] version 1.95 or higher
+[/list]
+[size=130][u]Installation[/u][/size]
+
+Place the [b]options_helper/[/b] folder in your X4 extensions directory alongside your other mods.
+
+[hr]
+
+[size=130][u]API Reference[/u][/size]
+
+All libraries live in the [b]md.Options_Helper[/b] namespace. Widget-building libraries use [b]purpose="run_actions"[/b] (called with [b]<run_actions ref="...">[/b]) while layout and event-processing libraries use [b]purpose="include_actions"[/b] (called with [b]<include_actions ref="...">[/b]).
+
+[size=125][u]Layout libraries[/u][/size]
+
+[size=120][u][b]Add_Empty_Row[/b] — [b]include_actions[/b][/u][/size]
+
+Adds a thin visual separator row (border height) to the current options menu.
+
+[code=xml]
+<include_actions ref="md.Options_Helper.Add_Empty_Row" />
+[/code]
+
+[hr]
+
+[size=120][u][b]Add_Title_Row[/b] — [b]run_actions[/b][/u][/size]
+
+Adds a centred section title row followed by an empty separator row.
+[list]
+[*] [b]title[/b] [i](required)[/i] - Text string or text DB reference [b]{page, id}[/b]
+[*] [b]columns[/b] [i](default: [b]12[/b])[/i] - Number of columns in the menu
+[/list]
+[code=xml]
+<run_actions ref="md.Options_Helper.Add_Title_Row">
+  <param name="title" value="{1972092401, 100}" />
+  <param name="columns" value="12" />
+</run_actions>
+[/code]
+
+[hr]
+
+[size=125][u]Widget libraries[/u][/size]
+
+[size=120][u][b]Add_Checkbox[/b] — [b]run_actions[/b][/u][/size]
+
+Adds a checkbox widget with a text label to its right. Automatically starts a new row when [b]col == 1[/b].
+[list]
+[*] [b]id[/b] [i](required)[/i] - String identifier - used to build the widget id and the echo key [b]$<id>[/b]
+[*] [b]col[/b] [i](default: [b]1[/b])[/i] - Column for the checkbox widget
+[*] [b]textColSpan[/b] [i](default: [b]1[/b])[/i] - Column span for the label text cell
+[*] [b]text[/b] [i](default: [b]''[/b])[/i] - Label text or text DB reference
+[*] [b]data[/b] [i](required)[/i] - Table holding the current value at key [b]$<id>[/b]
+[*] [b]active[/b] [i](default: [b]true[/b])[/i] - Whether the widget is interactive
+[*] [b]handle[/b] [i](default: [b]null[/b])[/i] - Cue to signal on click
+[/list]
+[b]Handler echo fields:[/b]
+[list]
+[*] [b]event.param.$echo.$valueId[/b] - table key string, e.g. [b]'$mySetting'[/b]
+[*] [b]event.param.$checked[/b] - int [b]0[/b] or [b]1[/b] after the click
+[/list]
+[code=xml]
+<run_actions ref="md.Options_Helper.Add_Checkbox">
+  <param name="id" value="'mySetting'" />
+  <param name="col" value="1" />
+  <param name="textColSpan" value="11" />
+  <param name="text" value="{1972092401, 110}" />
+  <param name="data" value="@$mySettings" />
+  <param name="handle" value="Handle_Checkbox" />
+</run_actions>
+[/code]
+
+[hr]
+
+[size=120][u][b]Add_Dropdown[/b] — [b]run_actions[/b][/u][/size]
+
+Adds a label text cell followed by a dropdown widget on the same row. Automatically starts a new row when [b]col == 1[/b].
+[list]
+[*] [b]id[/b] [i](required)[/i] - String identifier - used to build the widget id and the echo key [b]$<id>[/b]
+[*] [b]options[/b] [i](required)[/i] - List of [b][$text = ..., $value = ...][/b] option entries
+[*] [b]currentIndex[/b] [i](default: [b]1[/b])[/i] - 1-based index of the initially selected option
+[*] [b]col[/b] [i](default: [b]1[/b])[/i] - Column for the label text cell
+[*] [b]textColSpan[/b] [i](default: [b]1[/b])[/i] - Column span for the label
+[*] [b]text[/b] [i](default: [b]''[/b])[/i] - Label text or text DB reference
+[*] [b]dropdownColSpan[/b] [i](default: [b]1[/b])[/i] - Column span for the dropdown widget
+[*] [b]active[/b] [i](default: [b]true[/b])[/i] - Whether the widget is interactive
+[*] [b]handle[/b] [i](default: [b]null[/b])[/i] - Cue to signal on option confirm
+[/list]
+[b]Handler echo fields:[/b]
+[list]
+[*] [b]event.param.$echo.$valueId[/b] - table key string, e.g. [b]'$myOption'[/b]
+[*] [b]event.param.$option.$value[/b] - value of the selected option
+[/list]
+[code=xml]
+<run_actions ref="md.Options_Helper.Add_Dropdown">
+  <param name="id" value="'myOption'" />
+  <param name="options" value="$myOptions" />
+  <param name="currentIndex" value="$currentIndex" />
+  <param name="col" value="1" />
+  <param name="textColSpan" value="7" />
+  <param name="text" value="{1972092401, 120}" />
+  <param name="dropdownColSpan" value="5" />
+  <param name="handle" value="Handle_Dropdown" />
+</run_actions>
+[/code]
+
+[hr]
+
+[size=120][u][b]Add_Slider[/b] — [b]run_actions[/b][/u][/size]
+
+Adds a non-selectable label row followed by a slider widget row. Always creates a two-row pair.
+[list]
+[*] [b]id[/b] [i](required)[/i] - String identifier - used to build the widget id and the echo key [b]$<id>[/b]
+[*] [b]text[/b] [i](default: [b]''[/b])[/i] - Label text or text DB reference shown above the slider
+[*] [b]min[/b] [i](default: [b]0[/b])[/i] - Minimum slider value
+[*] [b]max[/b] [i](default: [b]100[/b])[/i] - Maximum slider value
+[*] [b]step[/b] [i](default: [b]1[/b])[/i] - Step increment between slider positions
+[*] [b]suffix[/b] [i](default: [b]''[/b])[/i] - String appended to the displayed current value
+[*] [b]colSpan[/b] [i](default: [b]1[/b])[/i] - Column span for both the label and slider cells
+[*] [b]data[/b] [i](required)[/i] - Table holding the current value at key [b]$<id>[/b]
+[*] [b]readOnly[/b] [i](default: [b]false[/b])[/i] - Whether the slider is display-only
+[*] [b]handle[/b] [i](default: [b]null[/b])[/i] - Cue to signal on slider confirm
+[/list]
+[b]Handler echo fields:[/b]
+[list]
+[*] [b]event.param.$echo.$valueId[/b] - table key string, e.g. [b]'$mySlider'[/b]
+[*] [b]event.param.$value[/b] - confirmed longfloat value
+[/list]
+[code=xml]
+<run_actions ref="md.Options_Helper.Add_Slider">
+  <param name="id" value="'myThreshold'" />
+  <param name="min" value="0" />
+  <param name="max" value="1000000" />
+  <param name="step" value="1000" />
+  <param name="text" value="{1972092401, 130}" />
+  <param name="suffix" value="' Cr'" />
+  <param name="colSpan" value="12" />
+  <param name="data" value="@$mySettings" />
+  <param name="handle" value="Handle_Slider" />
+</run_actions>
+[/code]
+
+[hr]
+
+[size=125][u]Event-processing libraries[/u][/size]
+
+These three libraries are [b]include_actions[/b] — they run inline inside your handler cue, where [b]event.param[/b] is in scope. Before calling, assign [b]$resultTable[/b] to the table you want written.
+
+[size=120][u][b]Process_Dropdown_Changed[/b] — [b]include_actions[/b][/u][/size]
+
+Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$option.$value[/b], writes the selected value into [b]$resultTable[/b].
+
+[code=xml]
+<cue name="Handle_Dropdown" instantiate="true">
+  <conditions><event_cue_signalled /></conditions>
+  <actions>
+    <set_value name="$resultTable" exact="@$mySettings" />
+    <include_actions ref="md.Options_Helper.Process_Dropdown_Changed" />
+    <remove_value name="$resultTable" />
+  </actions>
+</cue>
+[/code]
+
+[hr]
+
+[size=120][u][b]Process_Slider_Changed[/b] — [b]include_actions[/b][/u][/size]
+
+Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$value[/b], writes the confirmed slider value into [b]$resultTable[/b].
+
+[code=xml]
+<cue name="Handle_Slider" instantiate="true">
+  <conditions><event_cue_signalled /></conditions>
+  <actions>
+    <set_value name="$resultTable" exact="@$mySettings" />
+    <include_actions ref="md.Options_Helper.Process_Slider_Changed" />
+    <remove_value name="$resultTable" />
+  </actions>
+</cue>
+[/code]
+
+[hr]
+
+[size=120][u][b]Process_Checkbox_Changed[/b] — [b]include_actions[/b][/u][/size]
+
+Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$checked[/b] (int [b]0[/b]/[b]1[/b]), writes the checked state into [b]$resultTable[/b].
+
+[code=xml]
+<cue name="Handle_Checkbox" instantiate="true">
+  <conditions><event_cue_signalled /></conditions>
+  <actions>
+    <set_value name="$resultTable" exact="@$mySettings" />
+    <include_actions ref="md.Options_Helper.Process_Checkbox_Changed" />
+    <remove_value name="$resultTable" />
+  </actions>
+</cue>
+[/code]
+
+[hr]
+
+[size=130][u]Complete Usage Example[/u][/size]
+
+[code=xml]
+<!-- Register your menu on API reload -->
+<cue name="Register_Menu" instantiate="true">
+  <conditions>
+    <event_cue_signalled cue="md.Simple_Menu_API.Reloaded" />
+  </conditions>
+  <actions>
+    <signal_cue_instantly cue="md.Simple_Menu_API.Register_Options_Menu"
+      param="table[
+        $id      = 'my_mod_options',
+        $columns = 12,
+        $title   = 'My Mod Options',
+        $onOpen  = My_Menu_Open,
+      ]" />
+  </actions>
+</cue>
+
+<!-- Build menu content on open -->
+<cue name="My_Menu_Open" instantiate="true">
+  <conditions><event_cue_signalled /></conditions>
+  <actions>
+    <!-- load your settings table into $mySettings here -->
+
+    <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+    <run_actions ref="md.Options_Helper.Add_Title_Row">
+      <param name="title" value="'General Settings'" />
+    </run_actions>
+
+    <run_actions ref="md.Options_Helper.Add_Checkbox">
+      <param name="id" value="'enabled'" />
+      <param name="col" value="1" />
+      <param name="textColSpan" value="11" />
+      <param name="text" value="'Enable feature'" />
+      <param name="data" value="@$mySettings" />
+      <param name="handle" value="Handle_Checkbox" />
+    </run_actions>
+
+    <run_actions ref="md.Options_Helper.Add_Slider">
+      <param name="id" value="'threshold'" />
+      <param name="min" value="0" />
+      <param name="max" value="100000" />
+      <param name="step" value="1000" />
+      <param name="text" value="'Minimum threshold'" />
+      <param name="suffix" value="' Cr'" />
+      <param name="colSpan" value="12" />
+      <param name="data" value="@$mySettings" />
+      <param name="handle" value="Handle_Slider" />
+    </run_actions>
+  </actions>
+</cue>
+
+<!-- Handlers -->
+<cue name="Handle_Checkbox" instantiate="true">
+  <conditions><event_cue_signalled /></conditions>
+  <actions>
+    <set_value name="$resultTable" exact="@$mySettings" />
+    <include_actions ref="md.Options_Helper.Process_Checkbox_Changed" />
+    <remove_value name="$resultTable" />
+    <!-- persist $mySettings here -->
+  </actions>
+</cue>
+
+<cue name="Handle_Slider" instantiate="true">
+  <conditions><event_cue_signalled /></conditions>
+  <actions>
+    <set_value name="$resultTable" exact="@$mySettings" />
+    <include_actions ref="md.Options_Helper.Process_Slider_Changed" />
+    <remove_value name="$resultTable" />
+    <!-- persist $mySettings here -->
+  </actions>
+</cue>
+[/code]
+
+[hr]
+
+[size=130][u]Credits[/u][/size]
+[list]
+[*] [b]Author[/b]: Chem O`Dun, on [url=https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659]Nexus Mods[/url] and [url=https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160]Steam Workshop[/url]
+[*] [i]"X4: Foundations"[/i] is a trademark of [url=https://www.egosoft.com]Egosoft[/url].
+[/list]
+[size=130][u]Acknowledgements[/u][/size]
+[list]
+[*] [url=https://www.egosoft.com]EGOSOFT[/url] - for the X series.
+[*] [url=https://next.nexusmods.com/profile/sirnukes?gameId=2659]SirNukes[/url] - for the [b]Mod Support APIs[/b] that power the UI hooks.
+[/list]
