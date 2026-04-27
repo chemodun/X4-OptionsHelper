@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="Options_Helper" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+  <cues>
+    <!-- Register your menu on API reload -->
+    <cue name="Register_Menu" instantiate="true">
+      <conditions>
+        <event_cue_signalled cue="md.Simple_Menu_API.Reloaded" />
+      </conditions>
+      <actions>
+        <signal_cue_instantly cue="md.Simple_Menu_API.Register_Options_Menu"
+          param="table[
+            $id      = 'my_mod_options',
+            $columns = 12,
+            $title   = 'My Mod Options',
+            $onOpen  = My_Menu_Open,
+      ]" />
+      </actions>
+    </cue>
+
+    <!-- Build menu content on open -->
+    <cue name="My_Menu_Open" instantiate="true">
+      <conditions>
+        <event_cue_signalled />
+      </conditions>
+      <actions>
+        <!-- load your settings table into $mySettings here -->
+
+        <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+        <run_actions ref="md.Options_Helper.Add_Title_Row">
+          <param name="title" value="'General Settings'" />
+        </run_actions>
+
+        <run_actions ref="md.Options_Helper.Add_Checkbox">
+          <param name="id" value="'enabled'" />
+          <param name="col" value="1" />
+          <param name="textColSpan" value="11" />
+          <param name="text" value="'Enable feature'" />
+          <param name="data" value="@$mySettings" />
+          <param name="handle" value="Handle_Checkbox" />
+        </run_actions>
+
+        <run_actions ref="md.Options_Helper.Add_Slider">
+          <param name="id" value="'threshold'" />
+          <param name="min" value="0" />
+          <param name="max" value="100000" />
+          <param name="step" value="1000" />
+          <param name="text" value="'Minimum threshold'" />
+          <param name="suffix" value="' Cr'" />
+          <param name="colSpan" value="12" />
+          <param name="data" value="@$mySettings" />
+          <param name="handle" value="Handle_Slider" />
+        </run_actions>
+      </actions>
+    </cue>
+
+    <!-- Handlers -->
+    <cue name="Handle_Checkbox" instantiate="true">
+      <conditions>
+        <event_cue_signalled />
+      </conditions>
+      <actions>
+        <set_value name="$resultTable" exact="@$mySettings" />
+        <include_actions ref="md.Options_Helper.Process_Checkbox_Changed" />
+        <remove_value name="$resultTable" />
+        <!-- persist $mySettings here -->
+      </actions>
+    </cue>
+
+    <cue name="Handle_Slider" instantiate="true">
+      <conditions>
+        <event_cue_signalled />
+      </conditions>
+      <actions>
+        <set_value name="$resultTable" exact="@$mySettings" />
+        <include_actions ref="md.Options_Helper.Process_Slider_Changed" />
+        <remove_value name="$resultTable" />
+        <!-- persist $mySettings here -->
+      </actions>
+    </cue>
+  </cues>
+</mdscript>

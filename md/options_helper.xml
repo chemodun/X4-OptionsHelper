@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Options Helper — reusable MD libraries for building SirNukes Simple_Menu_API options menus.
+
+  All widget libraries use purpose="run_actions" and are called cross-script with:
+    <run_actions ref="md.Options_Helper.LibraryName">
+      <param name="paramName" value="expr" />
+    </run_actions>
+
+  The Add_Empty_Row library uses purpose="include_actions" and is called with:
+    <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+
+  Echo pattern (checkbox / dropdown / slider):
+    The handler cue receives event.param with:
+      event.param.$echo.$valueId  — the table key (e.g. '$mySetting') to read/write on the data table
+-->
+<mdscript name="Options_Helper" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+  <cues>
+
+    <!--
+      Add a visual separator (empty row) to the current options menu.
+
+      Call:
+        <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+    -->
+    <library name="Add_Empty_Row" purpose="include_actions">
+      <actions>
+        <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" param="table[$selectable = false]" />
+        <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
+          param="table[
+            $col = 1,
+            $colSpan = 12,
+            $height = 'Helper.borderSize',
+            $fontsize = 'Helper.borderSize',
+          ]" />
+      </actions>
+    </library>
+
+    <!--
+      Add a centered section title row followed by an empty separator row.
+
+      Params:
+        title    — text or text DB reference to display as the section title
+        columns  — number of columns in the menu (default 12)
+
+      Call:
+        <run_actions ref="md.Options_Helper.Add_Title_Row">
+          <param name="title" value="{page, id}" />
+          <param name="columns" value="12" />
+        </run_actions>
+    -->
+    <library name="Add_Title_Row" purpose="run_actions">
+      <params>
+        <param name="title" />
+        <param name="columns" default="12" />
+      </params>
+      <actions>
+        <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" param="table[$selectable = false]" />
+        <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
+          param="table[
+            $col = 1,
+            $colSpan = $columns,
+            $fontsize = 'Helper.titleFontSize',
+            $titleColor = 'Color.text_normal',
+            $halign = 'center',
+            $text = $title,
+          ]" />
+        <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+      </actions>
+    </library>
+
+    <!--
+      Add a checkbox widget with a text label to its right.
+      Automatically starts a new row when col == 1.
+
+      Params:
+        id           — string identifier; used to build the widget id and the echo $valueId ('$<id>')
+        col          — column for the checkbox widget (default 1)
+        textColSpan  — column span for the label text cell (default 1)
+        text         — label text or text DB reference shown to the right of the checkbox
+        data         — table holding the current boolean/int value at key '$<id>'
+        active       — bool, whether the widget is interactive (default true)
+        handle       — cue to signal on checkbox click; echo contains $valueId
+
+      Handler echo fields:
+        event.param.$echo.$valueId  — table key string (e.g. '$mySetting')
+        event.param.$checked        — int (0 or 1) after the click
+
+      Call:
+        <run_actions ref="md.Options_Helper.Add_Checkbox">
+          <param name="id" value="'mySetting'" />
+          <param name="col" value="1" />
+          <param name="textColSpan" value="5" />
+          <param name="text" value="{page, id}" />
+          <param name="data" value="@$myData" />
+          <param name="handle" value="My_Handle_Cue" />
+        </run_actions>
+    -->
+    <library name="Add_Checkbox" purpose="run_actions">
+      <params>
+        <param name="id" />
+        <param name="col" default="1" />
+        <param name="textColSpan" default="1" />
+        <param name="text" default="''" />
+        <param name="data" />
+        <param name="active" default="true" />
+        <param name="handle" default="null" />
+      </params>
+      <actions>
+        <do_if value="@$id != null and $col? and $textColSpan? and @$text != null and @$data != null">
+          <do_if value="@$col == 1">
+            <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" />
+          </do_if>
+          <set_value name="$valueId" exact="'$%s' . [@$id]" />
+          <signal_cue_instantly cue="md.Simple_Menu_API.Make_CheckBox"
+            param="table[
+              $id = 'Options_Helper_Checkbox_%s' . [@$id],
+              $checked = @$data.{@$valueId} == true or @$data.{@$valueId} == 1,
+              $col = @$col,
+              $colSpan = 1,
+              $x = 20,
+              $width = 'Helper.standardButtonHeight',
+              $height = 'Helper.standardButtonHeight',
+              $active = @$active,
+              $onClick = @$handle,
+              $echo = table[
+                $valueId = @$valueId
+              ],
+            ]" />
+          <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
+            param="table[
+              $col = @$col + 1,
+              $colSpan = @$textColSpan,
+              $halign = 'left',
+              $text = @$text,
+            ]" />
+        </do_if>
+      </actions>
+    </library>
+
+    <!--
+      Add a label text cell followed by a dropdown widget on the same row.
+      Automatically starts a new row when col == 1.
+
+      Params:
+        id              — string identifier; used to build the widget id and the echo $valueId ('$<id>')
+        options         — list of table[$text = ..., $value = ...] option entries
+        currentIndex    — 1-based index of the initially selected option (default 1)
+        col             — column for the label text cell (default 1)
+        textColSpan     — column span for the label (default 1)
+        text            — label text or text DB reference shown to the left of the dropdown
+        dropdownColSpan — column span for the dropdown widget (default 1)
+        active          — bool, whether the widget is interactive (default true)
+        handle          — cue to signal on option confirm; echo contains $valueId
+
+      Handler echo fields:
+        event.param.$echo.$valueId  — table key string (e.g. '$myOption')
+        event.param.$option         — the selected option subtable
+        event.param.$option.$value  — the value of the selected option
+
+      Call:
+        <run_actions ref="md.Options_Helper.Add_Dropdown">
+          <param name="id" value="'myOption'" />
+          <param name="options" value="$myOptions" />
+          <param name="currentIndex" value="$currentIndex" />
+          <param name="col" value="1" />
+          <param name="textColSpan" value="7" />
+          <param name="text" value="{page, id}" />
+          <param name="dropdownColSpan" value="5" />
+          <param name="handle" value="My_Handle_Cue" />
+        </run_actions>
+    -->
+    <library name="Add_Dropdown" purpose="run_actions">
+      <params>
+        <param name="id" />
+        <param name="options" />
+        <param name="currentIndex" default="1" />
+        <param name="col" default="1" />
+        <param name="textColSpan" default="1" />
+        <param name="text" default="''" />
+        <param name="dropdownColSpan" default="1" />
+        <param name="active" default="true" />
+        <param name="handle" default="null" />
+      </params>
+      <actions>
+        <do_if value="@$id != null and @$options != null and $currentIndex? and $col? and $textColSpan? and @$text != null and $dropdownColSpan?">
+          <set_value name="$valueId" exact="'$%s' . [@$id]" />
+          <do_if value="@$col == 1">
+            <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" />
+          </do_if>
+          <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
+            param="table[
+              $col = @$col,
+              $colSpan = @$textColSpan,
+              $halign = 'left',
+              $text = @$text,
+            ]" />
+          <signal_cue_instantly cue="md.Simple_Menu_API.Make_Dropdown"
+            param="table[
+              $id = 'Options_Helper_Dropdown_%s' . [@$id],
+              $col = @$col + @$textColSpan,
+              $colSpan = @$dropdownColSpan,
+              $options = @$options,
+              $startOption = @$currentIndex,
+              $active = @$active,
+              $onDropDownConfirmed = @$handle,
+              $echo = table[
+                $valueId = @$valueId
+              ],
+            ]" />
+        </do_if>
+      </actions>
+    </library>
+
+    <!--
+      Add a non-selectable label row followed by a slider widget row.
+      Always starts a new row pair (label row + slider row).
+
+      Params:
+        id       — string identifier; used to build the widget id and the echo $valueId ('$<id>')
+        text     — label text or text DB reference shown in the row above the slider
+        min      — minimum slider value (default 0)
+        max      — maximum slider value (default 100)
+        step     — step increment between slider positions (default 1)
+        suffix   — string appended to the displayed current value (default '')
+        colSpan  — column span for both the label and slider cells (default 1)
+        data     — table holding the current numeric value at key '$<id>'
+        readOnly — bool, whether the slider is read-only / display-only (default false)
+        handle   — cue to signal on slider confirm; echo contains $valueId
+
+      Handler echo fields:
+        event.param.$echo.$valueId  — table key string (e.g. '$mySlider')
+        event.param.$value          — the confirmed longfloat value
+
+      Call:
+        <run_actions ref="md.Options_Helper.Add_Slider">
+          <param name="id" value="'mySlider'" />
+          <param name="min" value="0" />
+          <param name="max" value="1000000" />
+          <param name="step" value="1000" />
+          <param name="text" value="{page, id}" />
+          <param name="suffix" value="' Cr'" />
+          <param name="colSpan" value="12" />
+          <param name="data" value="@$myData" />
+          <param name="handle" value="My_Handle_Cue" />
+        </run_actions>
+    -->
+    <library name="Add_Slider" purpose="run_actions">
+      <params>
+        <param name="id" />
+        <param name="text" default="''" />
+        <param name="min" default="0" />
+        <param name="max" default="100" />
+        <param name="step" default="1" />
+        <param name="suffix" default="''" />
+        <param name="colSpan" default="1" />
+        <param name="data" />
+        <param name="readOnly" default="false" />
+        <param name="handle" default="null" />
+      </params>
+      <actions>
+        <do_if value="@$id != null and $min? and $max? and $step? and @$data != null">
+          <set_value name="$valueId" exact="'$%s' . [@$id]" />
+          <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" param="table[$selectable = false]" />
+          <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
+            param="table[
+              $col = 1,
+              $colSpan = @$colSpan,
+              $halign = 'left',
+              $text = @$text,
+            ]" />
+          <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" />
+          <signal_cue_instantly cue="md.Simple_Menu_API.Make_Slider"
+            param="table[
+              $id = 'Options_Helper_Slider_%s' . [@$id],
+              $col = 1,
+              $colSpan = @$colSpan,
+              $min = @$min,
+              $max = @$max,
+              $step = @$step,
+              $start = @$data.{@$valueId},
+              $suffix = @$suffix,
+              $readOnly = @$readOnly,
+              $onSliderCellConfirm = @$handle,
+              $echo = table[
+                $valueId = @$valueId
+              ],
+            ]" />
+        </do_if>
+      </actions>
+    </library>
+
+    <!--
+      Process a dropdown confirmation event and store the selected value into resultTable.
+      Call this from inside your handler cue's <actions> to avoid repeating the echo/valueId pattern.
+
+      Reads from:
+        event.param.$echo.$valueId  — table key to write (e.g. '$mySetting')
+        event.param.$option.$value  — the confirmed dropdown value
+
+      Params:
+        resultTable — the table to write the value into at key event.param.$echo.$valueId
+
+      Call (set $resultTable before calling):
+        <set_value name="$resultTable" exact="@$myData" />
+        <include_actions ref="md.Options_Helper.Process_Dropdown_Changed" />
+    -->
+    <library name="Process_Dropdown_Changed" purpose="include_actions">
+      <actions>
+        <do_if value="@$resultTable != null">
+          <set_value name="$valueId" exact="event.param.$echo.$valueId" />
+          <set_value name="$resultTable.{@$valueId}" exact="event.param.$option.$value" />
+          <remove_value name="$valueId" />
+        </do_if>
+      </actions>
+    </library>
+
+    <!--
+      Process a slider confirmation event and store the confirmed value into resultTable.
+      Call this from inside your handler cue's <actions> to avoid repeating the echo/valueId pattern.
+
+      Reads from:
+        event.param.$echo.$valueId  — table key to write (e.g. '$mySetting')
+        event.param.$value          — the confirmed slider longfloat value
+
+      Params:
+        resultTable — the table to write the value into at key event.param.$echo.$valueId
+
+      Call (set $resultTable before calling):
+        <set_value name="$resultTable" exact="@$myData" />
+        <include_actions ref="md.Options_Helper.Process_Slider_Changed" />
+    -->
+    <library name="Process_Slider_Changed" purpose="include_actions">
+      <actions>
+        <do_if value="@$resultTable != null">
+          <set_value name="$valueId" exact="event.param.$echo.$valueId" />
+          <set_value name="$resultTable.{@$valueId}" exact="event.param.$value" />
+          <remove_value name="$valueId" />
+        </do_if>
+      </actions>
+    </library>
+
+    <!--
+      Process a checkbox click event and store the checked state into resultTable.
+      Call this from inside your handler cue's <actions> to avoid repeating the echo/valueId pattern.
+
+      Reads from:
+        event.param.$echo.$valueId  — table key to write (e.g. '$mySetting')
+        event.param.$checked        — int 0 or 1 after the click
+
+      Params:
+        resultTable — the table to write the value into at key event.param.$echo.$valueId
+
+      Call (set $resultTable before calling):
+        <set_value name="$resultTable" exact="@$myData" />
+        <include_actions ref="md.Options_Helper.Process_Checkbox_Changed" />
+    -->
+    <library name="Process_Checkbox_Changed" purpose="include_actions">
+      <actions>
+        <do_if value="@$resultTable != null">
+          <set_value name="$valueId" exact="event.param.$echo.$valueId" />
+          <set_value name="$resultTable.{@$valueId}" exact="event.param.$checked" />
+          <remove_value name="$valueId" />
+        </do_if>
+      </actions>
+    </library>
+
+  </cues>
+</mdscript>

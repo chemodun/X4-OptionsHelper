@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content
+    id=""
+    name="Options Helper"
+    author="Chem O`Dun"
+    version="100"
+    date="2026-04-27"
+    save="false"
+    sync="false"
+    description="Helper library for building SirNukes Simple_Menu_API options menus. Provides reusable MD libraries for checkboxes, dropdowns, sliders, and section title rows.">
+</content>
