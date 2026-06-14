@@ -214,7 +214,7 @@
 
     <!--
       Add a non-selectable label row followed by a slider widget row.
-      Always starts a new row pair (label row + slider row).
+      If textColSpan is set, all widgets will be in one row; otherwise,it will be a row pair (label row + slider row).
 
       Params:
         id       — string identifier; used to build the widget id and the echo $valueId ('$<id>')
@@ -224,6 +224,7 @@
         step     — step increment between slider positions (default 1)
         suffix   — string appended to the displayed current value (default '')
         colSpan  — column span for both the label and slider cells (default 1)
+        textColSpan — column span for the label text cell (default null, i.e. same as colSpan)
         data     — table holding the current numeric value at key '$<id>'
         readOnly — bool, whether the slider is read-only / display-only (default false)
         handle   — cue to signal on slider confirm; echo contains $valueId
@@ -245,15 +246,16 @@
           <param name="handle" value="My_Handle_Cue" />
         </run_actions>
     -->
-    <library name="Add_Slider" purpose="run_actions">
+    <library name="Add_Slider" purpose="run_actions" version="2">
       <params>
         <param name="id" />
         <param name="text" default="''" />
+        <param name="colSpan" default="1" />
+        <param name="textColSpan" default="null" />
         <param name="min" default="0" />
         <param name="max" default="100" />
         <param name="step" default="1" />
         <param name="suffix" default="''" />
-        <param name="colSpan" default="1" />
         <param name="data" />
         <param name="readOnly" default="false" />
         <param name="handle" default="null" />
@@ -261,19 +263,26 @@
       <actions>
         <do_if value="@$id != null and $min? and $max? and $step? and @$data != null">
           <set_value name="$valueId" exact="'$%s' . [@$id]" />
-          <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" param="table[$selectable = false]" />
+          <do_if value="@$textColSpan == null">
+            <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" param="table[$selectable = false]" />
+          </do_if>
+          <do_else>
+            <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" />
+          </do_else>
           <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
             param="table[
               $col = 1,
-              $colSpan = @$colSpan,
+              $colSpan = if @$textColSpan != null then @$textColSpan else @$colSpan,
               $halign = 'left',
               $text = @$text,
             ]" />
-          <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" />
+          <do_if value="@$textColSpan == null">
+            <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" />
+          </do_if>
           <signal_cue_instantly cue="md.Simple_Menu_API.Make_Slider"
             param="table[
               $id = 'Options_Helper_Slider_%s' . [@$id],
-              $col = 1,
+              $col = if @$textColSpan != null then @$textColSpan + 1 else 1,
               $colSpan = @$colSpan,
               $min = @$min,
               $max = @$max,
@@ -282,6 +291,89 @@
               $suffix = @$suffix,
               $readOnly = @$readOnly,
               $onSliderCellConfirm = @$handle,
+              $echo = table[
+                $valueId = @$valueId
+              ],
+            ]" />
+        </do_if>
+      </actions>
+    </library>
+
+    <!--
+      Add a label text cell followed by a dropdown widget on the same row.
+      Automatically starts a new row when col == 1.
+
+      Params:
+        id              — string identifier; used to build the widget id and the echo $valueId ('$<id>')
+        options         — list of table[$text = ..., $value = ...] option entries
+        currentIndex    — 1-based index of the initially selected option (default 1)
+        col             — column for the label text cell (default 1)
+        textColSpan     — column span for the label (default 1)
+        text            — label text or text DB reference shown to the left of the button
+        buttonColSpan   — column span for the button widget (default 1)
+        buttonText      — text or text DB reference shown on the button (default '')
+        buttonAlign     — horizontal alignment of the button text (default 'center')
+        buttonColor     — color of the button (default null)
+        active          — bool, whether the widget is interactive (default true)
+        handle          — cue to signal on option confirm; echo contains $valueId
+
+      Handler echo fields:
+        event.param.$echo.$valueId  — table key string (e.g. '$myOption')
+        event.param.$option         — the selected option subtable
+        event.param.$option.$value  — the value of the selected option
+
+      Call:
+        <run_actions ref="md.Options_Helper.Add_Button">
+          <param name="id" value="'myOption'" />
+          <param name="options" value="$myOptions" />
+          <param name="currentIndex" value="$currentIndex" />
+          <param name="col" value="1" />
+          <param name="textColSpan" value="7" />
+          <param name="text" value="{page, id}" />
+          <param name="buttonColSpan" value="5" />
+          <param name="buttonText" value="{page, id}" />
+          <param name="buttonAlign" value="'center'" />
+          <param name="handle" value="My_Handle_Cue" />
+        </run_actions>
+    -->
+    <library name="Add_Button" purpose="run_actions">
+      <params>
+        <param name="id" />
+        <param name="col" default="1" />
+        <param name="textColSpan" default="1" />
+        <param name="text" default="''" />
+        <param name="buttonColSpan" default="1" />
+        <param name="buttonText" default="''" />
+        <param name="buttonAlign" default="'center'" />
+        <param name="buttonColor" default="null" />
+        <param name="active" default="true" />
+        <param name="handle" default="null" />
+      </params>
+      <actions>
+        <do_if value="@$id != null and $col? and $textColSpan? and @$text != null and $buttonColSpan? and @$buttonText != null">
+          <set_value name="$valueId" exact="'$%s' . [@$id]" />
+          <do_if value="@$col == 1">
+            <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" />
+          </do_if>
+          <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
+            param="table[
+              $col = @$col,
+              $colSpan = @$textColSpan,
+              $halign = 'left',
+              $text = @$text,
+            ]" />
+          <signal_cue_instantly cue="md.Simple_Menu_API.Make_Button"
+            param="table[
+              $id = 'Options_Helper_Button_%s' . [@$id],
+              $col = @$col + @$textColSpan,
+              $colSpan = @$buttonColSpan,
+              $text = table[
+                $text =@$buttonText,  
+                $halign = @$buttonAlign,
+                $color = @$buttonColor
+              ],
+              $active = @$active,
+              $onClick = @$handle,
               $echo = table[
                 $valueId = @$valueId
               ],
