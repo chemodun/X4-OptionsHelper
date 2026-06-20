@@ -119,11 +119,12 @@ Adds a non-selectable label row followed by a slider widget row. Always creates 
 
 - `id` *(required)* - String identifier - used to build the widget id and the echo key `$<id>`
 - `text` *(default: `''`)* - Label text or text DB reference shown above the slider
+- `colSpan` *(default: `1`)* - Column span for the slider cell (and label when `textColSpan` is not set)
+- `textColSpan` *(default: `null`)* - Column span for the label text cell. When set, the label and slider share one row; when `null`, they occupy separate rows
 - `min` *(default: `0`)* - Minimum slider value
 - `max` *(default: `100`)* - Maximum slider value
 - `step` *(default: `1`)* - Step increment between slider positions
 - `suffix` *(default: `''`)* - String appended to the displayed current value
-- `colSpan` *(default: `1`)* - Column span for both the label and slider cells
 - `data` *(required)* - Table holding the current value at key `$<id>`
 - `readOnly` *(default: `false`)* - Whether the slider is display-only
 - `handle` *(default: `null`)* - Cue to signal on slider confirm
@@ -144,6 +145,39 @@ Adds a non-selectable label row followed by a slider widget row. Always creates 
   <param name="colSpan" value="12" />
   <param name="data" value="@$mySettings" />
   <param name="handle" value="Handle_Slider" />
+</run_actions>
+```
+
+---
+
+#### `Add_Button` — `run_actions`
+
+Adds a label text cell followed by a button widget on the same row. Automatically starts a new row when `col == 1`.
+
+- `id` *(required)* - String identifier - used to build the widget id and the echo key `$<id>`
+- `col` *(default: `1`)* - Column for the label text cell
+- `textColSpan` *(default: `1`)* - Column span for the label
+- `text` *(default: `''`)* - Label text or text DB reference shown to the left of the button
+- `buttonColSpan` *(default: `1`)* - Column span for the button widget
+- `buttonText` *(default: `''`)* - Text or text DB reference shown on the button face
+- `buttonAlign` *(default: `'center'`)* - Horizontal alignment of the button text
+- `buttonColor` *(default: `null`)* - Color of the button text (engine default when `null`)
+- `active` *(default: `true`)* - Whether the widget is interactive
+- `handle` *(default: `null`)* - Cue to signal on button click
+
+**Handler echo fields:**
+
+- `event.param.$echo.$valueId` - table key string, e.g. `'$myButton'`
+
+```xml
+<run_actions ref="md.Options_Helper.Add_Button">
+  <param name="id" value="'myAction'" />
+  <param name="col" value="1" />
+  <param name="textColSpan" value="8" />
+  <param name="text" value="'Perform action'" />
+  <param name="buttonColSpan" value="4" />
+  <param name="buttonText" value="'Run'" />
+  <param name="handle" value="Handle_Button" />
 </run_actions>
 ```
 
@@ -278,6 +312,25 @@ Reads `event.param.$echo.$valueId` and `event.param.$checked` (int `0`/`1`), wri
   </actions>
 </cue>
 ```
+
+---
+
+## Changelog
+
+### 1.10 (2026-06-20)
+
+- `Add_Button`: new library that adds a label text cell followed by a button widget on the same row, with configurable button text, alignment, color, and click handler.
+- `Add_Slider`: added optional `textColSpan` parameter. When set, the label and slider render in a single row (label in `textColSpan` columns, slider immediately to its right); when omitted the original two-row layout is preserved.
+
+### 1.00 (2026-04-27)
+
+- Initial public release.
+- `Add_Empty_Row` - visual separator row.
+- `Add_Title_Row` - centred section title row with separator.
+- `Add_Checkbox` - checkbox widget with label, `active` and `handle` params.
+- `Add_Dropdown` - dropdown widget with label, `active` and `handle` params.
+- `Add_Slider` - slider widget with label, `readOnly` and `handle` params.
+- `Process_Checkbox_Changed`, `Process_Slider_Changed`, `Process_Dropdown_Changed` - inline event-processing libraries that write the received value into `$resultTable`.
 
 ---
 
