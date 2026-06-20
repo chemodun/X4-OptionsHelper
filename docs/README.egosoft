@@ -13,8 +13,6 @@ Instead of repeating the widget-construction boilerplate in every mod, declare y
 
 Place the [b]options_helper/[/b] folder in your X4 extensions directory alongside your other mods.
 
-[hr]
-
 [size=130][u]API Reference[/u][/size]
 
 All libraries live in the [b]md.Options_Helper[/b] namespace. Widget-building libraries use [b]purpose="run_actions"[/b] (called with [b]<run_actions ref="...">[/b]) while layout and event-processing libraries use [b]purpose="include_actions"[/b] (called with [b]<include_actions ref="...">[/b]).
@@ -29,8 +27,6 @@ Adds a thin visual separator row (border height) to the current options menu.
 <include_actions ref="md.Options_Helper.Add_Empty_Row" />
 [/code]
 
-[hr]
-
 [size=120][u][b]Add_Title_Row[/b] — [b]run_actions[/b][/u][/size]
 
 Adds a centred section title row followed by an empty separator row.
@@ -44,8 +40,6 @@ Adds a centred section title row followed by an empty separator row.
   <param name="columns" value="12" />
 </run_actions>
 [/code]
-
-[hr]
 
 [size=125][u]Widget libraries[/u][/size]
 
@@ -76,8 +70,6 @@ Adds a checkbox widget with a text label to its right. Automatically starts a ne
   <param name="handle" value="Handle_Checkbox" />
 </run_actions>
 [/code]
-
-[hr]
 
 [size=120][u][b]Add_Dropdown[/b] — [b]run_actions[/b][/u][/size]
 
@@ -110,8 +102,6 @@ Adds a label text cell followed by a dropdown widget on the same row. Automatica
   <param name="handle" value="Handle_Dropdown" />
 </run_actions>
 [/code]
-
-[hr]
 
 [size=120][u][b]Add_Slider[/b] — [b]run_actions[/b][/u][/size]
 
@@ -148,8 +138,6 @@ Adds a non-selectable label row followed by a slider widget row. Always creates 
 </run_actions>
 [/code]
 
-[hr]
-
 [size=120][u][b]Add_Button[/b] — [b]run_actions[/b][/u][/size]
 
 Adds a label text cell followed by a button widget on the same row. Automatically starts a new row when [b]col == 1[/b].
@@ -181,8 +169,6 @@ Adds a label text cell followed by a button widget on the same row. Automaticall
 </run_actions>
 [/code]
 
-[hr]
-
 [size=125][u]Event-processing libraries[/u][/size]
 
 These three libraries are [b]include_actions[/b] — they run inline inside your handler cue, where [b]event.param[/b] is in scope. Before calling, assign [b]$resultTable[/b] to the table you want written.
@@ -202,8 +188,6 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$option.$value[/b], w
 </cue>
 [/code]
 
-[hr]
-
 [size=120][u][b]Process_Slider_Changed[/b] — [b]include_actions[/b][/u][/size]
 
 Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$value[/b], writes the confirmed slider value into [b]$resultTable[/b].
@@ -219,8 +203,6 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$value[/b], writes th
 </cue>
 [/code]
 
-[hr]
-
 [size=120][u][b]Process_Checkbox_Changed[/b] — [b]include_actions[/b][/u][/size]
 
 Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$checked[/b] (int [b]0[/b]/[b]1[/b]), writes the checked state into [b]$resultTable[/b].
@@ -235,8 +217,6 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$checked[/b] (int [b]
   </actions>
 </cue>
 [/code]
-
-[hr]
 
 [size=130][u]Complete Usage Example[/u][/size]
 
@@ -313,8 +293,16 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$checked[/b] (int [b]
 </cue>
 [/code]
 
-[hr]
-
+[size=130][u]Credits[/u][/size]
+[list]
+[*] [b]Author[/b]: Chem O`Dun, on [url=https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659]Nexus Mods[/url] and [url=https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160]Steam Workshop[/url]
+[*] [i]"X4: Foundations"[/i] is a trademark of [url=https://www.egosoft.com]Egosoft[/url].
+[/list]
+[size=130][u]Acknowledgements[/u][/size]
+[list]
+[*] [url=https://www.egosoft.com]EGOSOFT[/url] - for the X series.
+[*] [url=https://next.nexusmods.com/profile/sirnukes?gameId=2659]SirNukes[/url] - for the [b]Mod Support APIs[/b] that power the UI hooks.
+[/list]
 [size=130][u]Changelog[/u][/size]
 
 [size=125][u]1.10 (2026-06-20)[/u][/size]
@@ -331,16 +319,4 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$checked[/b] (int [b]
 [*] [b]Add_Dropdown[/b] - dropdown widget with label, [b]active[/b] and [b]handle[/b] params.
 [*] [b]Add_Slider[/b] - slider widget with label, [b]readOnly[/b] and [b]handle[/b] params.
 [*] [b]Process_Checkbox_Changed[/b], [b]Process_Slider_Changed[/b], [b]Process_Dropdown_Changed[/b] - inline event-processing libraries that write the received value into [b]$resultTable[/b].
-[/list]
-[hr]
-
-[size=130][u]Credits[/u][/size]
-[list]
-[*] [b]Author[/b]: Chem O`Dun, on [url=https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659]Nexus Mods[/url] and [url=https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160]Steam Workshop[/url]
-[*] [i]"X4: Foundations"[/i] is a trademark of [url=https://www.egosoft.com]Egosoft[/url].
-[/list]
-[size=130][u]Acknowledgements[/u][/size]
-[list]
-[*] [url=https://www.egosoft.com]EGOSOFT[/url] - for the X series.
-[*] [url=https://next.nexusmods.com/profile/sirnukes?gameId=2659]SirNukes[/url] - for the [b]Mod Support APIs[/b] that power the UI hooks.
 [/list]
