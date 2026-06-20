@@ -13,8 +13,6 @@ Instead of repeating the widget-construction boilerplate in every mod, declare y
 
 Place the `options_helper/` folder in your X4 extensions directory alongside your other mods.
 
----
-
 ## API Reference
 
 All libraries live in the `md.Options_Helper` namespace. Widget-building libraries use `purpose="run_actions"` (called with `<run_actions ref="...">`) while layout and event-processing libraries use `purpose="include_actions"` (called with `<include_actions ref="...">`).
@@ -29,8 +27,6 @@ Adds a thin visual separator row (border height) to the current options menu.
 <include_actions ref="md.Options_Helper.Add_Empty_Row" />
 ```
 
----
-
 #### `Add_Title_Row` — `run_actions`
 
 Adds a centred section title row followed by an empty separator row.
@@ -44,8 +40,6 @@ Adds a centred section title row followed by an empty separator row.
   <param name="columns" value="12" />
 </run_actions>
 ```
-
----
 
 ### Widget libraries
 
@@ -76,8 +70,6 @@ Adds a checkbox widget with a text label to its right. Automatically starts a ne
   <param name="handle" value="Handle_Checkbox" />
 </run_actions>
 ```
-
----
 
 #### `Add_Dropdown` — `run_actions`
 
@@ -110,8 +102,6 @@ Adds a label text cell followed by a dropdown widget on the same row. Automatica
   <param name="handle" value="Handle_Dropdown" />
 </run_actions>
 ```
-
----
 
 #### `Add_Slider` — `run_actions`
 
@@ -148,8 +138,6 @@ Adds a non-selectable label row followed by a slider widget row. Always creates 
 </run_actions>
 ```
 
----
-
 #### `Add_Button` — `run_actions`
 
 Adds a label text cell followed by a button widget on the same row. Automatically starts a new row when `col == 1`.
@@ -181,8 +169,6 @@ Adds a label text cell followed by a button widget on the same row. Automaticall
 </run_actions>
 ```
 
----
-
 ### Event-processing libraries
 
 These three libraries are `include_actions` — they run inline inside your handler cue, where `event.param` is in scope. Before calling, assign `$resultTable` to the table you want written.
@@ -202,8 +188,6 @@ Reads `event.param.$echo.$valueId` and `event.param.$option.$value`, writes the 
 </cue>
 ```
 
----
-
 #### `Process_Slider_Changed` — `include_actions`
 
 Reads `event.param.$echo.$valueId` and `event.param.$value`, writes the confirmed slider value into `$resultTable`.
@@ -219,8 +203,6 @@ Reads `event.param.$echo.$valueId` and `event.param.$value`, writes the confirme
 </cue>
 ```
 
----
-
 #### `Process_Checkbox_Changed` — `include_actions`
 
 Reads `event.param.$echo.$valueId` and `event.param.$checked` (int `0`/`1`), writes the checked state into `$resultTable`.
@@ -235,8 +217,6 @@ Reads `event.param.$echo.$valueId` and `event.param.$checked` (int `0`/`1`), wri
   </actions>
 </cue>
 ```
-
----
 
 ## Complete Usage Example
 
@@ -313,7 +293,15 @@ Reads `event.param.$echo.$valueId` and `event.param.$checked` (int `0`/`1`), wri
 </cue>
 ```
 
----
+## Credits
+
+- **Author**: Chem O`Dun, on [Nexus Mods](https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659) and [Steam Workshop](https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160)
+- *"X4: Foundations"* is a trademark of [Egosoft](https://www.egosoft.com).
+
+## Acknowledgements
+
+- [EGOSOFT](https://www.egosoft.com) - for the X series.
+- [SirNukes](https://next.nexusmods.com/profile/sirnukes?gameId=2659) - for the `Mod Support APIs` that power the UI hooks.
 
 ## Changelog
 
@@ -332,14 +320,3 @@ Reads `event.param.$echo.$valueId` and `event.param.$checked` (int `0`/`1`), wri
 - `Add_Slider` - slider widget with label, `readOnly` and `handle` params.
 - `Process_Checkbox_Changed`, `Process_Slider_Changed`, `Process_Dropdown_Changed` - inline event-processing libraries that write the received value into `$resultTable`.
 
----
-
-## Credits
-
-- **Author**: Chem O`Dun, on [Nexus Mods](https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659) and [Steam Workshop](https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160)
-- *"X4: Foundations"* is a trademark of [Egosoft](https://www.egosoft.com).
-
-## Acknowledgements
-
-- [EGOSOFT](https://www.egosoft.com) - for the X series.
-- [SirNukes](https://next.nexusmods.com/profile/sirnukes?gameId=2659) - for the `Mod Support APIs` that power the UI hooks.
