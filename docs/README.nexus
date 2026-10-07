@@ -13,13 +13,17 @@ Instead of repeating the widget-construction boilerplate in every mod, declare y
 
 Place the [b]options_helper/[/b] folder in your X4 extensions directory alongside your other mods.
 
+[size=3][u][b]Save state[/b][/u][/size]
+
+[b]No[/b] (removing the extension does not break saves).
+
 [size=3][u][b]API Reference[/b][/u][/size]
 
 All libraries live in the [b]md.Options_Helper[/b] namespace. Widget-building libraries use [b]purpose="run_actions"[/b] (called with [b]<run_actions ref="...">[/b]) while layout and event-processing libraries use [b]purpose="include_actions"[/b] (called with [b]<include_actions ref="...">[/b]).
 
 [size=3][u][i]Layout libraries[/i][/u][/size]
 
-[size=3][u][b]Add_Empty_Row[/b] — [b]include_actions[/b][/u][/size]
+[size=3][u][b]Add_Empty_Row[/b] - [b]include_actions[/b][/u][/size]
 
 Adds a thin visual separator row (border height) to the current options menu.
 
@@ -27,7 +31,7 @@ Adds a thin visual separator row (border height) to the current options menu.
 <include_actions ref="md.Options_Helper.Add_Empty_Row" />
 [/code]
 
-[size=3][u][b]Add_Title_Row[/b] — [b]run_actions[/b][/u][/size]
+[size=3][u][b]Add_Title_Row[/b] - [b]run_actions[/b][/u][/size]
 
 Adds a centred section title row followed by an empty separator row.
 [list]
@@ -43,7 +47,7 @@ Adds a centred section title row followed by an empty separator row.
 
 [size=3][u][i]Widget libraries[/i][/u][/size]
 
-[size=3][u][b]Add_Checkbox[/b] — [b]run_actions[/b][/u][/size]
+[size=3][u][b]Add_Checkbox[/b] - [b]run_actions[/b][/u][/size]
 
 Adds a checkbox widget with a text label to its right. Automatically starts a new row when [b]col == 1[/b].
 [list]
@@ -71,7 +75,7 @@ Adds a checkbox widget with a text label to its right. Automatically starts a ne
 </run_actions>
 [/code]
 
-[size=3][u][b]Add_Dropdown[/b] — [b]run_actions[/b][/u][/size]
+[size=3][u][b]Add_Dropdown[/b] - [b]run_actions[/b][/u][/size]
 
 Adds a label text cell followed by a dropdown widget on the same row. Automatically starts a new row when [b]col == 1[/b].
 [list]
@@ -103,7 +107,7 @@ Adds a label text cell followed by a dropdown widget on the same row. Automatica
 </run_actions>
 [/code]
 
-[size=3][u][b]Add_Slider[/b] — [b]run_actions[/b][/u][/size]
+[size=3][u][b]Add_Slider[/b] - [b]run_actions[/b][/u][/size]
 
 Adds a non-selectable label row followed by a slider widget row. Always creates a two-row pair.
 [list]
@@ -138,7 +142,7 @@ Adds a non-selectable label row followed by a slider widget row. Always creates 
 </run_actions>
 [/code]
 
-[size=3][u][b]Add_Button[/b] — [b]run_actions[/b][/u][/size]
+[size=3][u][b]Add_Button[/b] - [b]run_actions[/b][/u][/size]
 
 Adds a label text cell followed by a button widget on the same row. Automatically starts a new row when [b]col == 1[/b].
 [list]
@@ -169,11 +173,45 @@ Adds a label text cell followed by a button widget on the same row. Automaticall
 </run_actions>
 [/code]
 
+[size=3][u][b]Add_EditBox[/b] - [b]run_actions[/b][/u][/size]
+
+Adds a label text cell followed by a text edit box on the same row. Automatically starts a new row when [b]col == 1[/b].
+[list]
+[*] [b]id[/b] [i](required)[/i] - String identifier - used to build the widget id and the echo key [b]$<id>[/b]
+[*] [b]col[/b] [i](default: [b]1[/b])[/i] - Column for the label text cell
+[*] [b]textColSpan[/b] [i](default: [b]1[/b])[/i] - Column span for the label
+[*] [b]text[/b] [i](default: [b]''[/b])[/i] - Label text or text DB reference shown to the left of the edit box
+[*] [b]boxColSpan[/b] [i](default: [b]1[/b])[/i] - Column span for the edit box
+[*] [b]data[/b] [i](required)[/i] - Table holding the current string at key [b]$<id>[/b]
+[*] [b]defaultText[/b] [i](default: [b]''[/b])[/i] - Text shown while the box is empty
+[*] [b]maxChars[/b] [i](default: [b]50[/b])[/i] - Maximum number of characters
+[*] [b]active[/b] [i](default: [b]true[/b])[/i] - Whether the widget is interactive
+[*] [b]handle[/b] [i](default: [b]null[/b])[/i] - Cue to signal when the box is deselected
+[/list]
+[b]Handler echo fields:[/b]
+[list]
+[*] [b]event.param.$echo.$valueId[/b] - table key string, e.g. [b]'$myText'[/b]
+[*] [b]event.param.$text[/b] - the text in the box
+[*] [b]event.param.$textchanged[/b] - the text changed since the box was activated
+[*] [b]event.param.$wasconfirmed[/b] - [b]false[/b] when the player pressed Escape, which also empties the box
+[/list]
+[code]
+<run_actions ref="md.Options_Helper.Add_EditBox">
+  <param name="id" value="'myText'" />
+  <param name="col" value="1" />
+  <param name="textColSpan" value="4" />
+  <param name="text" value="'Name'" />
+  <param name="boxColSpan" value="8" />
+  <param name="data" value="@$mySettings" />
+  <param name="handle" value="Handle_EditBox" />
+</run_actions>
+[/code]
+
 [size=3][u][i]Event-processing libraries[/i][/u][/size]
 
-These three libraries are [b]include_actions[/b] — they run inline inside your handler cue, where [b]event.param[/b] is in scope. Before calling, assign [b]$resultTable[/b] to the table you want written.
+These libraries are [b]include_actions[/b] - they run inline inside your handler cue, where [b]event.param[/b] is in scope. Before calling, assign [b]$resultTable[/b] to the table you want written.
 
-[size=3][u][b]Process_Dropdown_Changed[/b] — [b]include_actions[/b][/u][/size]
+[size=3][u][b]Process_Dropdown_Changed[/b] - [b]include_actions[/b][/u][/size]
 
 Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$option.$value[/b], writes the selected value into [b]$resultTable[/b].
 
@@ -188,7 +226,7 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$option.$value[/b], w
 </cue>
 [/code]
 
-[size=3][u][b]Process_Slider_Changed[/b] — [b]include_actions[/b][/u][/size]
+[size=3][u][b]Process_Slider_Changed[/b] - [b]include_actions[/b][/u][/size]
 
 Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$value[/b], writes the confirmed slider value into [b]$resultTable[/b].
 
@@ -203,7 +241,7 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$value[/b], writes th
 </cue>
 [/code]
 
-[size=3][u][b]Process_Checkbox_Changed[/b] — [b]include_actions[/b][/u][/size]
+[size=3][u][b]Process_Checkbox_Changed[/b] - [b]include_actions[/b][/u][/size]
 
 Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$checked[/b] (int [b]0[/b]/[b]1[/b]), writes the checked state into [b]$resultTable[/b].
 
@@ -213,6 +251,21 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$checked[/b] (int [b]
   <actions>
     <set_value name="$resultTable" exact="@$mySettings" />
     <include_actions ref="md.Options_Helper.Process_Checkbox_Changed" />
+    <remove_value name="$resultTable" />
+  </actions>
+</cue>
+[/code]
+
+[size=3][u][b]Process_EditBox_Changed[/b] - [b]include_actions[/b][/u][/size]
+
+Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$text[/b], writes the text into [b]$resultTable[/b] only when it was changed and confirmed (Escape leaves the stored value as it was).
+
+[code]
+<cue name="Handle_EditBox" instantiate="true">
+  <conditions><event_cue_signalled /></conditions>
+  <actions>
+    <set_value name="$resultTable" exact="@$mySettings" />
+    <include_actions ref="md.Options_Helper.Process_EditBox_Changed" />
     <remove_value name="$resultTable" />
   </actions>
 </cue>
@@ -305,12 +358,17 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$checked[/b] (int [b]
 [/list]
 [size=3][u][b]Changelog[/b][/u][/size]
 
-[size=3][u][i]1.10 (2026-06-20)[/i][/u][/size]
+[size=3][u][i][1.20] - 2026-10-08[/i][/u][/size]
+[list]
+[*] [b]Add_EditBox[/b]: new library that adds a label text cell followed by a text edit box on the same row.
+[*] [b]Process_EditBox_Changed[/b]: new library that stores a confirmed edit box text into [b]$resultTable[/b].
+[/list]
+[size=3][u][i][1.10] - 2026-06-20[/i][/u][/size]
 [list]
 [*] [b]Add_Button[/b]: new library that adds a label text cell followed by a button widget on the same row, with configurable button text, alignment, color, and click handler.
 [*] [b]Add_Slider[/b]: added optional [b]textColSpan[/b] parameter. When set, the label and slider render in a single row (label in [b]textColSpan[/b] columns, slider immediately to its right); when omitted the original two-row layout is preserved.
 [/list]
-[size=3][u][i]1.00 (2026-04-27)[/i][/u][/size]
+[size=3][u][i][1.00] - 2026-04-27[/i][/u][/size]
 [list]
 [*] Initial public release.
 [*] [b]Add_Empty_Row[/b] - visual separator row.
