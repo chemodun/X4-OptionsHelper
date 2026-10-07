@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Options Helper — reusable MD libraries for building SirNukes Simple_Menu_API options menus.
+  Options Helper - reusable MD libraries for building SirNukes Simple_Menu_API options menus.
 
   All widget libraries use purpose="run_actions" and are called cross-script with:
     <run_actions ref="md.Options_Helper.LibraryName">
@@ -12,7 +12,7 @@
 
   Echo pattern (checkbox / dropdown / slider):
     The handler cue receives event.param with:
-      event.param.$echo.$valueId  — the table key (e.g. '$mySetting') to read/write on the data table
+      event.param.$echo.$valueId  - the table key (e.g. '$mySetting') to read/write on the data table
 -->
 <mdscript name="Options_Helper" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
   <cues>
@@ -40,8 +40,8 @@
       Add a centered section title row followed by an empty separator row.
 
       Params:
-        title    — text or text DB reference to display as the section title
-        columns  — number of columns in the menu (default 12)
+        title    - text or text DB reference to display as the section title
+        columns  - number of columns in the menu (default 12)
 
       Call:
         <run_actions ref="md.Options_Helper.Add_Title_Row">
@@ -74,17 +74,17 @@
       Automatically starts a new row when col == 1.
 
       Params:
-        id           — string identifier; used to build the widget id and the echo $valueId ('$<id>')
-        col          — column for the checkbox widget (default 1)
-        textColSpan  — column span for the label text cell (default 1)
-        text         — label text or text DB reference shown to the right of the checkbox
-        data         — table holding the current boolean/int value at key '$<id>'
-        active       — bool, whether the widget is interactive (default true)
-        handle       — cue to signal on checkbox click; echo contains $valueId
+        id           - string identifier; used to build the widget id and the echo $valueId ('$<id>')
+        col          - column for the checkbox widget (default 1)
+        textColSpan  - column span for the label text cell (default 1)
+        text         - label text or text DB reference shown to the right of the checkbox
+        data         - table holding the current boolean/int value at key '$<id>'
+        active       - bool, whether the widget is interactive (default true)
+        handle       - cue to signal on checkbox click; echo contains $valueId
 
       Handler echo fields:
-        event.param.$echo.$valueId  — table key string (e.g. '$mySetting')
-        event.param.$checked        — int (0 or 1) after the click
+        event.param.$echo.$valueId  - table key string (e.g. '$mySetting')
+        event.param.$checked        - int (0 or 1) after the click
 
       Call:
         <run_actions ref="md.Options_Helper.Add_Checkbox">
@@ -143,20 +143,20 @@
       Automatically starts a new row when col == 1.
 
       Params:
-        id              — string identifier; used to build the widget id and the echo $valueId ('$<id>')
-        options         — list of table[$text = ..., $value = ...] option entries
-        currentIndex    — 1-based index of the initially selected option (default 1)
-        col             — column for the label text cell (default 1)
-        textColSpan     — column span for the label (default 1)
-        text            — label text or text DB reference shown to the left of the dropdown
-        dropdownColSpan — column span for the dropdown widget (default 1)
-        active          — bool, whether the widget is interactive (default true)
-        handle          — cue to signal on option confirm; echo contains $valueId
+        id              - string identifier; used to build the widget id and the echo $valueId ('$<id>')
+        options         - list of table[$text = ..., $value = ...] option entries
+        currentIndex    - 1-based index of the initially selected option (default 1)
+        col             - column for the label text cell (default 1)
+        textColSpan     - column span for the label (default 1)
+        text            - label text or text DB reference shown to the left of the dropdown
+        dropdownColSpan - column span for the dropdown widget (default 1)
+        active          - bool, whether the widget is interactive (default true)
+        handle          - cue to signal on option confirm; echo contains $valueId
 
       Handler echo fields:
-        event.param.$echo.$valueId  — table key string (e.g. '$myOption')
-        event.param.$option         — the selected option subtable
-        event.param.$option.$value  — the value of the selected option
+        event.param.$echo.$valueId  - table key string (e.g. '$myOption')
+        event.param.$option         - the selected option subtable
+        event.param.$option.$value  - the value of the selected option
 
       Call:
         <run_actions ref="md.Options_Helper.Add_Dropdown">
@@ -217,21 +217,21 @@
       If textColSpan is set, all widgets will be in one row; otherwise,it will be a row pair (label row + slider row).
 
       Params:
-        id       — string identifier; used to build the widget id and the echo $valueId ('$<id>')
-        text     — label text or text DB reference shown in the row above the slider
-        min      — minimum slider value (default 0)
-        max      — maximum slider value (default 100)
-        step     — step increment between slider positions (default 1)
-        suffix   — string appended to the displayed current value (default '')
-        colSpan  — column span for both the label and slider cells (default 1)
-        textColSpan — column span for the label text cell (default null, i.e. same as colSpan)
-        data     — table holding the current numeric value at key '$<id>'
-        readOnly — bool, whether the slider is read-only / display-only (default false)
-        handle   — cue to signal on slider confirm; echo contains $valueId
+        id       - string identifier; used to build the widget id and the echo $valueId ('$<id>')
+        text     - label text or text DB reference shown in the row above the slider
+        min      - minimum slider value (default 0)
+        max      - maximum slider value (default 100)
+        step     - step increment between slider positions (default 1)
+        suffix   - string appended to the displayed current value (default '')
+        colSpan  - column span for both the label and slider cells (default 1)
+        textColSpan - column span for the label text cell (default null, i.e. same as colSpan)
+        data     - table holding the current numeric value at key '$<id>'
+        readOnly - bool, whether the slider is read-only / display-only (default false)
+        handle   - cue to signal on slider confirm; echo contains $valueId
 
       Handler echo fields:
-        event.param.$echo.$valueId  — table key string (e.g. '$mySlider')
-        event.param.$value          — the confirmed longfloat value
+        event.param.$echo.$valueId  - table key string (e.g. '$mySlider')
+        event.param.$value          - the confirmed longfloat value
 
       Call:
         <run_actions ref="md.Options_Helper.Add_Slider">
@@ -304,23 +304,23 @@
       Automatically starts a new row when col == 1.
 
       Params:
-        id              — string identifier; used to build the widget id and the echo $valueId ('$<id>')
-        options         — list of table[$text = ..., $value = ...] option entries
-        currentIndex    — 1-based index of the initially selected option (default 1)
-        col             — column for the label text cell (default 1)
-        textColSpan     — column span for the label (default 1)
-        text            — label text or text DB reference shown to the left of the button
-        buttonColSpan   — column span for the button widget (default 1)
-        buttonText      — text or text DB reference shown on the button (default '')
-        buttonAlign     — horizontal alignment of the button text (default 'center')
-        buttonColor     — color of the button (default null)
-        active          — bool, whether the widget is interactive (default true)
-        handle          — cue to signal on option confirm; echo contains $valueId
+        id              - string identifier; used to build the widget id and the echo $valueId ('$<id>')
+        options         - list of table[$text = ..., $value = ...] option entries
+        currentIndex    - 1-based index of the initially selected option (default 1)
+        col             - column for the label text cell (default 1)
+        textColSpan     - column span for the label (default 1)
+        text            - label text or text DB reference shown to the left of the button
+        buttonColSpan   - column span for the button widget (default 1)
+        buttonText      - text or text DB reference shown on the button (default '')
+        buttonAlign     - horizontal alignment of the button text (default 'center')
+        buttonColor     - color of the button (default null)
+        active          - bool, whether the widget is interactive (default true)
+        handle          - cue to signal on option confirm; echo contains $valueId
 
       Handler echo fields:
-        event.param.$echo.$valueId  — table key string (e.g. '$myOption')
-        event.param.$option         — the selected option subtable
-        event.param.$option.$value  — the value of the selected option
+        event.param.$echo.$valueId  - table key string (e.g. '$myOption')
+        event.param.$option         - the selected option subtable
+        event.param.$option.$value  - the value of the selected option
 
       Call:
         <run_actions ref="md.Options_Helper.Add_Button">
@@ -383,15 +383,120 @@
     </library>
 
     <!--
+      Add a label text cell followed by a text edit box on the same row.
+      Automatically starts a new row when col == 1.
+
+      Params:
+        id           - string identifier; used to build the widget id and the echo $valueId ('$<id>')
+        col          - column for the label text cell (default 1)
+        textColSpan  - column span for the label (default 1)
+        text         - label text or text DB reference shown to the left of the edit box
+        boxColSpan   - column span for the edit box (default 1)
+        data         - table holding the current string at key '$<id>'
+        defaultText  - text shown while the box is empty (default '')
+        maxChars     - maximum number of characters (default 50)
+        active       - bool, whether the widget is interactive (default true)
+        handle       - cue to signal when the box is deselected; echo contains $valueId
+
+      Handler echo fields:
+        event.param.$echo.$valueId  - table key string (e.g. '$myText')
+        event.param.$text           - the text in the box
+        event.param.$textchanged    - bool, the text changed since the box was activated
+        event.param.$wasconfirmed   - bool, false when the player pressed Escape (which also empties the box)
+
+      Call:
+        <run_actions ref="md.Options_Helper.Add_EditBox">
+          <param name="id" value="'myText'" />
+          <param name="col" value="1" />
+          <param name="textColSpan" value="5" />
+          <param name="text" value="{page, id}" />
+          <param name="boxColSpan" value="7" />
+          <param name="data" value="@$myData" />
+          <param name="handle" value="My_Handle_Cue" />
+        </run_actions>
+    -->
+    <library name="Add_EditBox" purpose="run_actions">
+      <params>
+        <param name="id" />
+        <param name="col" default="1" />
+        <param name="textColSpan" default="1" />
+        <param name="text" default="''" />
+        <param name="boxColSpan" default="1" />
+        <param name="data" />
+        <param name="defaultText" default="''" />
+        <param name="maxChars" default="50" />
+        <param name="active" default="true" />
+        <param name="handle" default="null" />
+      </params>
+      <actions>
+        <do_if value="@$id != null and $col? and $textColSpan? and @$text != null and $boxColSpan? and @$data != null">
+          <set_value name="$valueId" exact="'$%s' . [@$id]" />
+          <do_if value="@$col == 1">
+            <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" />
+          </do_if>
+          <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
+            param="table[
+              $col = @$col,
+              $colSpan = @$textColSpan,
+              $halign = 'left',
+              $text = @$text,
+            ]" />
+          <signal_cue_instantly cue="md.Simple_Menu_API.Make_EditBox"
+            param="table[
+              $id = 'Options_Helper_EditBox_%s' . [@$id],
+              $col = @$col + @$textColSpan,
+              $colSpan = @$boxColSpan,
+              $text = table[
+                $text = if @$data.{@$valueId} then '' + $data.{$valueId} else '',
+                $halign = 'left'
+              ],
+              $defaultText = @$defaultText,
+              $maxChars = @$maxChars,
+              $active = @$active,
+              $onEditBoxDeactivated = @$handle,
+              $echo = table[
+                $valueId = @$valueId
+              ],
+            ]" />
+        </do_if>
+      </actions>
+    </library>
+
+    <!--
+      Process an edit box deselection and store the text into resultTable.
+      Only a confirmed change is stored: Escape empties the box and reports wasconfirmed false.
+
+      Reads from:
+        event.param.$echo.$valueId  - table key to write (e.g. '$myText')
+        event.param.$text, event.param.$textchanged, event.param.$wasconfirmed
+
+      Params:
+        resultTable - the table to write the text into at key event.param.$echo.$valueId
+
+      Call (set $resultTable before calling):
+        <set_value name="$resultTable" exact="@$myData" />
+        <include_actions ref="md.Options_Helper.Process_EditBox_Changed" />
+    -->
+    <library name="Process_EditBox_Changed" purpose="include_actions">
+      <actions>
+        <do_if value="@$resultTable != null and @event.param.$wasconfirmed and @event.param.$textchanged">
+          <set_value name="$valueId" exact="event.param.$echo.$valueId" />
+          <set_value name="$resultTable.{@$valueId}" exact="'' + @event.param.$text" />
+          <remove_value name="$valueId" />
+        </do_if>
+      </actions>
+    </library>
+
+    <!--
       Process a dropdown confirmation event and store the selected value into resultTable.
       Call this from inside your handler cue's <actions> to avoid repeating the echo/valueId pattern.
 
       Reads from:
-        event.param.$echo.$valueId  — table key to write (e.g. '$mySetting')
-        event.param.$option.$value  — the confirmed dropdown value
+        event.param.$echo.$valueId  - table key to write (e.g. '$mySetting')
+        event.param.$option.$value  - the confirmed dropdown value
 
       Params:
-        resultTable — the table to write the value into at key event.param.$echo.$valueId
+        resultTable - the table to write the value into at key event.param.$echo.$valueId
 
       Call (set $resultTable before calling):
         <set_value name="$resultTable" exact="@$myData" />
@@ -412,11 +517,11 @@
       Call this from inside your handler cue's <actions> to avoid repeating the echo/valueId pattern.
 
       Reads from:
-        event.param.$echo.$valueId  — table key to write (e.g. '$mySetting')
-        event.param.$value          — the confirmed slider longfloat value
+        event.param.$echo.$valueId  - table key to write (e.g. '$mySetting')
+        event.param.$value          - the confirmed slider longfloat value
 
       Params:
-        resultTable — the table to write the value into at key event.param.$echo.$valueId
+        resultTable - the table to write the value into at key event.param.$echo.$valueId
 
       Call (set $resultTable before calling):
         <set_value name="$resultTable" exact="@$myData" />
@@ -437,11 +542,11 @@
       Call this from inside your handler cue's <actions> to avoid repeating the echo/valueId pattern.
 
       Reads from:
-        event.param.$echo.$valueId  — table key to write (e.g. '$mySetting')
-        event.param.$checked        — int 0 or 1 after the click
+        event.param.$echo.$valueId  - table key to write (e.g. '$mySetting')
+        event.param.$checked        - int 0 or 1 after the click
 
       Params:
-        resultTable — the table to write the value into at key event.param.$echo.$valueId
+        resultTable - the table to write the value into at key event.param.$echo.$valueId
 
       Call (set $resultTable before calling):
         <set_value name="$resultTable" exact="@$myData" />

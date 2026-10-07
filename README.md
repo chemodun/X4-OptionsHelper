@@ -13,13 +13,17 @@ Instead of repeating the widget-construction boilerplate in every mod, declare y
 
 Place the `options_helper/` folder in your X4 extensions directory alongside your other mods.
 
+## Save state
+
+**No** (removing the extension does not break saves).
+
 ## API Reference
 
 All libraries live in the `md.Options_Helper` namespace. Widget-building libraries use `purpose="run_actions"` (called with `<run_actions ref="...">`) while layout and event-processing libraries use `purpose="include_actions"` (called with `<include_actions ref="...">`).
 
 ### Layout libraries
 
-#### `Add_Empty_Row` — `include_actions`
+#### `Add_Empty_Row` - `include_actions`
 
 Adds a thin visual separator row (border height) to the current options menu.
 
@@ -27,7 +31,7 @@ Adds a thin visual separator row (border height) to the current options menu.
 <include_actions ref="md.Options_Helper.Add_Empty_Row" />
 ```
 
-#### `Add_Title_Row` — `run_actions`
+#### `Add_Title_Row` - `run_actions`
 
 Adds a centred section title row followed by an empty separator row.
 
@@ -43,7 +47,7 @@ Adds a centred section title row followed by an empty separator row.
 
 ### Widget libraries
 
-#### `Add_Checkbox` — `run_actions`
+#### `Add_Checkbox` - `run_actions`
 
 Adds a checkbox widget with a text label to its right. Automatically starts a new row when `col == 1`.
 
@@ -71,7 +75,7 @@ Adds a checkbox widget with a text label to its right. Automatically starts a ne
 </run_actions>
 ```
 
-#### `Add_Dropdown` — `run_actions`
+#### `Add_Dropdown` - `run_actions`
 
 Adds a label text cell followed by a dropdown widget on the same row. Automatically starts a new row when `col == 1`.
 
@@ -103,7 +107,7 @@ Adds a label text cell followed by a dropdown widget on the same row. Automatica
 </run_actions>
 ```
 
-#### `Add_Slider` — `run_actions`
+#### `Add_Slider` - `run_actions`
 
 Adds a non-selectable label row followed by a slider widget row. Always creates a two-row pair.
 
@@ -138,7 +142,7 @@ Adds a non-selectable label row followed by a slider widget row. Always creates 
 </run_actions>
 ```
 
-#### `Add_Button` — `run_actions`
+#### `Add_Button` - `run_actions`
 
 Adds a label text cell followed by a button widget on the same row. Automatically starts a new row when `col == 1`.
 
@@ -169,11 +173,45 @@ Adds a label text cell followed by a button widget on the same row. Automaticall
 </run_actions>
 ```
 
+#### `Add_EditBox` - `run_actions`
+
+Adds a label text cell followed by a text edit box on the same row. Automatically starts a new row when `col == 1`.
+
+- `id` *(required)* - String identifier - used to build the widget id and the echo key `$<id>`
+- `col` *(default: `1`)* - Column for the label text cell
+- `textColSpan` *(default: `1`)* - Column span for the label
+- `text` *(default: `''`)* - Label text or text DB reference shown to the left of the edit box
+- `boxColSpan` *(default: `1`)* - Column span for the edit box
+- `data` *(required)* - Table holding the current string at key `$<id>`
+- `defaultText` *(default: `''`)* - Text shown while the box is empty
+- `maxChars` *(default: `50`)* - Maximum number of characters
+- `active` *(default: `true`)* - Whether the widget is interactive
+- `handle` *(default: `null`)* - Cue to signal when the box is deselected
+
+**Handler echo fields:**
+
+- `event.param.$echo.$valueId` - table key string, e.g. `'$myText'`
+- `event.param.$text` - the text in the box
+- `event.param.$textchanged` - the text changed since the box was activated
+- `event.param.$wasconfirmed` - `false` when the player pressed Escape, which also empties the box
+
+```xml
+<run_actions ref="md.Options_Helper.Add_EditBox">
+  <param name="id" value="'myText'" />
+  <param name="col" value="1" />
+  <param name="textColSpan" value="4" />
+  <param name="text" value="'Name'" />
+  <param name="boxColSpan" value="8" />
+  <param name="data" value="@$mySettings" />
+  <param name="handle" value="Handle_EditBox" />
+</run_actions>
+```
+
 ### Event-processing libraries
 
-These three libraries are `include_actions` — they run inline inside your handler cue, where `event.param` is in scope. Before calling, assign `$resultTable` to the table you want written.
+These libraries are `include_actions` - they run inline inside your handler cue, where `event.param` is in scope. Before calling, assign `$resultTable` to the table you want written.
 
-#### `Process_Dropdown_Changed` — `include_actions`
+#### `Process_Dropdown_Changed` - `include_actions`
 
 Reads `event.param.$echo.$valueId` and `event.param.$option.$value`, writes the selected value into `$resultTable`.
 
@@ -188,7 +226,7 @@ Reads `event.param.$echo.$valueId` and `event.param.$option.$value`, writes the 
 </cue>
 ```
 
-#### `Process_Slider_Changed` — `include_actions`
+#### `Process_Slider_Changed` - `include_actions`
 
 Reads `event.param.$echo.$valueId` and `event.param.$value`, writes the confirmed slider value into `$resultTable`.
 
@@ -203,7 +241,7 @@ Reads `event.param.$echo.$valueId` and `event.param.$value`, writes the confirme
 </cue>
 ```
 
-#### `Process_Checkbox_Changed` — `include_actions`
+#### `Process_Checkbox_Changed` - `include_actions`
 
 Reads `event.param.$echo.$valueId` and `event.param.$checked` (int `0`/`1`), writes the checked state into `$resultTable`.
 
@@ -213,6 +251,21 @@ Reads `event.param.$echo.$valueId` and `event.param.$checked` (int `0`/`1`), wri
   <actions>
     <set_value name="$resultTable" exact="@$mySettings" />
     <include_actions ref="md.Options_Helper.Process_Checkbox_Changed" />
+    <remove_value name="$resultTable" />
+  </actions>
+</cue>
+```
+
+#### `Process_EditBox_Changed` - `include_actions`
+
+Reads `event.param.$echo.$valueId` and `event.param.$text`, writes the text into `$resultTable` only when it was changed and confirmed (Escape leaves the stored value as it was).
+
+```xml
+<cue name="Handle_EditBox" instantiate="true">
+  <conditions><event_cue_signalled /></conditions>
+  <actions>
+    <set_value name="$resultTable" exact="@$mySettings" />
+    <include_actions ref="md.Options_Helper.Process_EditBox_Changed" />
     <remove_value name="$resultTable" />
   </actions>
 </cue>
@@ -305,12 +358,17 @@ Reads `event.param.$echo.$valueId` and `event.param.$checked` (int `0`/`1`), wri
 
 ## Changelog
 
-### 1.10 (2026-06-20)
+### [1.20] - 2026-10-08
+
+- `Add_EditBox`: new library that adds a label text cell followed by a text edit box on the same row.
+- `Process_EditBox_Changed`: new library that stores a confirmed edit box text into `$resultTable`.
+
+### [1.10] - 2026-06-20
 
 - `Add_Button`: new library that adds a label text cell followed by a button widget on the same row, with configurable button text, alignment, color, and click handler.
 - `Add_Slider`: added optional `textColSpan` parameter. When set, the label and slider render in a single row (label in `textColSpan` columns, slider immediately to its right); when omitted the original two-row layout is preserved.
 
-### 1.00 (2026-04-27)
+### [1.00] - 2026-04-27
 
 - Initial public release.
 - `Add_Empty_Row` - visual separator row.
