@@ -37,6 +37,7 @@ Adds a centred section title row followed by an empty separator row.
 
 - `title` *(required)* - Text string or text DB reference `{page, id}`
 - `columns` *(default: `12`)* - Number of columns in the menu
+- `mouseOverText` *(default: `''`)* - Text or text DB reference shown on mouse over the title
 
 ```xml
 <run_actions ref="md.Options_Helper.Add_Title_Row">
@@ -362,6 +363,10 @@ Reads `event.param.$echo.$valueId` and `event.param.$text`, writes the text into
 - [SirNukes](https://next.nexusmods.com/profile/sirnukes?gameId=2659) - for the `Mod Support APIs` that power the UI hooks.
 
 ## Changelog
+
+### [1.31] - 2026-10-30
+
+- `Add_Title_Row`: new optional `mouseOverText` parameter, shown on mouse over the title.
 
 ### [1.30] - 2026-10-30
 

@@ -42,6 +42,7 @@
       Params:
         title    - text or text DB reference to display as the section title
         columns  - number of columns in the menu (default 12)
+        mouseOverText - text or text DB reference shown on mouse over the title (default '')
 
       Call:
         <run_actions ref="md.Options_Helper.Add_Title_Row">
@@ -49,10 +50,11 @@
           <param name="columns" value="12" />
         </run_actions>
     -->
-    <library name="Add_Title_Row" purpose="run_actions">
+    <library name="Add_Title_Row" purpose="run_actions" version="2">
       <params>
         <param name="title" />
         <param name="columns" default="12" />
+        <param name="mouseOverText" default="''" />
       </params>
       <actions>
         <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" param="table[$selectable = false]" />
@@ -64,6 +66,7 @@
             $titleColor = 'Color.text_normal',
             $halign = 'center',
             $text = $title,
+            $mouseOverText = @$mouseOverText,
           ]" />
         <include_actions ref="md.Options_Helper.Add_Empty_Row" />
       </actions>
