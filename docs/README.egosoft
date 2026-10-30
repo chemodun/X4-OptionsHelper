@@ -363,6 +363,10 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$text[/b], writes the
 [/list]
 [size=130][u]Changelog[/u][/size]
 
+[size=125][u][1.30] - 2026-10-30[/u][/size]
+[list]
+[*] [b]mouseOverText[/b]: new optional parameter for [b]Add_Checkbox[/b], [b]Add_Dropdown[/b], [b]Add_Slider[/b], [b]Add_Button[/b] and [b]Add_EditBox[/b], shown on mouse over the label and the widget.
+[/list]
 [size=125][u][1.20] - 2026-10-08[/u][/size]
 [list]
 [*] [b]Add_EditBox[/b]: new library that adds a label text cell followed by a text edit box on the same row.
