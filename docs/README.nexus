@@ -37,6 +37,7 @@ Adds a centred section title row followed by an empty separator row.
 [list]
 [*] [b]title[/b] [i](required)[/i] - Text string or text DB reference [b]{page, id}[/b]
 [*] [b]columns[/b] [i](default: [b]12[/b])[/i] - Number of columns in the menu
+[*] [b]mouseOverText[/b] [i](default: [b]''[/b])[/i] - Text or text DB reference shown on mouse over the title
 [/list]
 [code]
 <run_actions ref="md.Options_Helper.Add_Title_Row">
@@ -363,6 +364,10 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$text[/b], writes the
 [/list]
 [size=3][u][b]Changelog[/b][/u][/size]
 
+[size=3][u][i][1.31] - 2026-10-30[/i][/u][/size]
+[list]
+[*] [b]Add_Title_Row[/b]: new optional [b]mouseOverText[/b] parameter, shown on mouse over the title.
+[/list]
 [size=3][u][i][1.30] - 2026-10-30[/i][/u][/size]
 [list]
 [*] [b]mouseOverText[/b]: new optional parameter for [b]Add_Checkbox[/b], [b]Add_Dropdown[/b], [b]Add_Slider[/b], [b]Add_Button[/b] and [b]Add_EditBox[/b], shown on mouse over the label and the widget.
