@@ -122,7 +122,7 @@ Adds a non-selectable label row followed by a slider widget row. Always creates 
 [*] [b]max[/b] [i](default: [b]100[/b])[/i] - Maximum slider value
 [*] [b]step[/b] [i](default: [b]1[/b])[/i] - Step increment between slider positions
 [*] [b]suffix[/b] [i](default: [b]''[/b])[/i] - String appended to the displayed current value
-[*] [b]data[/b] [i](required)[/i] - Table holding the current value at key [b]$<id>[/b]
+[*] [b]data[/b] [i](required)[/i] - Table holding the current value at key [b]$<id>[/b]. A value outside [b]min[/b]..[b]max[/b] starts the slider at the nearest limit; the stored value changes only when the player moves the slider
 [*] [b]readOnly[/b] [i](default: [b]false[/b])[/i] - Whether the slider is display-only
 [*] [b]handle[/b] [i](default: [b]null[/b])[/i] - Cue to signal on slider confirm
 [*] [b]mouseOverText[/b] [i](default: [b]''[/b])[/i] - Text or text DB reference shown on mouse over the label and the slider
@@ -364,6 +364,10 @@ Reads [b]event.param.$echo.$valueId[/b] and [b]event.param.$text[/b], writes the
 [/list]
 [size=130][u]Changelog[/u][/size]
 
+[size=125][u][1.32] - 2026-10-30[/u][/size]
+[list]
+[*] [b]Add_Slider[/b]: a saved value outside [b]min[/b]..[b]max[/b] no longer breaks the whole options page.
+[/list]
 [size=125][u][1.31] - 2026-10-30[/u][/size]
 [list]
 [*] [b]Add_Title_Row[/b]: new optional [b]mouseOverText[/b] parameter, shown on mouse over the title.
