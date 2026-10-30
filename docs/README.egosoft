@@ -58,6 +58,7 @@ Adds a checkbox widget with a text label to its right. Automatically starts a ne
 [*] [b]data[/b] [i](required)[/i] - Table holding the current value at key [b]$<id>[/b]
 [*] [b]active[/b] [i](default: [b]true[/b])[/i] - Whether the widget is interactive
 [*] [b]handle[/b] [i](default: [b]null[/b])[/i] - Cue to signal on click
+[*] [b]mouseOverText[/b] [i](default: [b]''[/b])[/i] - Text or text DB reference shown on mouse over the label and the checkbox
 [/list]
 [b]Handler echo fields:[/b]
 [list]
@@ -88,6 +89,7 @@ Adds a label text cell followed by a dropdown widget on the same row. Automatica
 [*] [b]dropdownColSpan[/b] [i](default: [b]1[/b])[/i] - Column span for the dropdown widget
 [*] [b]active[/b] [i](default: [b]true[/b])[/i] - Whether the widget is interactive
 [*] [b]handle[/b] [i](default: [b]null[/b])[/i] - Cue to signal on option confirm
+[*] [b]mouseOverText[/b] [i](default: [b]''[/b])[/i] - Text or text DB reference shown on mouse over the label and the dropdown
 [/list]
 [b]Handler echo fields:[/b]
 [list]
@@ -122,6 +124,7 @@ Adds a non-selectable label row followed by a slider widget row. Always creates 
 [*] [b]data[/b] [i](required)[/i] - Table holding the current value at key [b]$<id>[/b]
 [*] [b]readOnly[/b] [i](default: [b]false[/b])[/i] - Whether the slider is display-only
 [*] [b]handle[/b] [i](default: [b]null[/b])[/i] - Cue to signal on slider confirm
+[*] [b]mouseOverText[/b] [i](default: [b]''[/b])[/i] - Text or text DB reference shown on mouse over the label and the slider
 [/list]
 [b]Handler echo fields:[/b]
 [list]
@@ -156,6 +159,7 @@ Adds a label text cell followed by a button widget on the same row. Automaticall
 [*] [b]buttonColor[/b] [i](default: [b]null[/b])[/i] - Color of the button text (engine default when [b]null[/b])
 [*] [b]active[/b] [i](default: [b]true[/b])[/i] - Whether the widget is interactive
 [*] [b]handle[/b] [i](default: [b]null[/b])[/i] - Cue to signal on button click
+[*] [b]mouseOverText[/b] [i](default: [b]''[/b])[/i] - Text or text DB reference shown on mouse over the label and the button
 [/list]
 [b]Handler echo fields:[/b]
 [list]
@@ -187,6 +191,7 @@ Adds a label text cell followed by a text edit box on the same row. Automaticall
 [*] [b]maxChars[/b] [i](default: [b]50[/b])[/i] - Maximum number of characters
 [*] [b]active[/b] [i](default: [b]true[/b])[/i] - Whether the widget is interactive
 [*] [b]handle[/b] [i](default: [b]null[/b])[/i] - Cue to signal when the box is deselected
+[*] [b]mouseOverText[/b] [i](default: [b]''[/b])[/i] - Text or text DB reference shown on mouse over the label and the edit box
 [/list]
 [b]Handler echo fields:[/b]
 [list]
