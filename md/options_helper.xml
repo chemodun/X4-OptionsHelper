@@ -81,6 +81,7 @@
         data         - table holding the current boolean/int value at key '$<id>'
         active       - bool, whether the widget is interactive (default true)
         handle       - cue to signal on checkbox click; echo contains $valueId
+        mouseOverText - text or text DB reference shown on mouse over the label and the checkbox (default '')
 
       Handler echo fields:
         event.param.$echo.$valueId  - table key string (e.g. '$mySetting')
@@ -96,7 +97,7 @@
           <param name="handle" value="My_Handle_Cue" />
         </run_actions>
     -->
-    <library name="Add_Checkbox" purpose="run_actions">
+    <library name="Add_Checkbox" purpose="run_actions" version="2">
       <params>
         <param name="id" />
         <param name="col" default="1" />
@@ -105,6 +106,7 @@
         <param name="data" />
         <param name="active" default="true" />
         <param name="handle" default="null" />
+        <param name="mouseOverText" default="''" />
       </params>
       <actions>
         <do_if value="@$id != null and $col? and $textColSpan? and @$text != null and @$data != null">
@@ -121,6 +123,7 @@
               $x = 20,
               $width = 'Helper.standardButtonHeight',
               $height = 'Helper.standardButtonHeight',
+              $mouseOverText = @$mouseOverText,
               $active = @$active,
               $onClick = @$handle,
               $echo = table[
@@ -133,6 +136,7 @@
               $colSpan = @$textColSpan,
               $halign = 'left',
               $text = @$text,
+              $mouseOverText = @$mouseOverText,
             ]" />
         </do_if>
       </actions>
@@ -152,6 +156,7 @@
         dropdownColSpan - column span for the dropdown widget (default 1)
         active          - bool, whether the widget is interactive (default true)
         handle          - cue to signal on option confirm; echo contains $valueId
+        mouseOverText   - text or text DB reference shown on mouse over the label and the dropdown (default '')
 
       Handler echo fields:
         event.param.$echo.$valueId  - table key string (e.g. '$myOption')
@@ -170,7 +175,7 @@
           <param name="handle" value="My_Handle_Cue" />
         </run_actions>
     -->
-    <library name="Add_Dropdown" purpose="run_actions">
+    <library name="Add_Dropdown" purpose="run_actions" version="2">
       <params>
         <param name="id" />
         <param name="options" />
@@ -181,6 +186,7 @@
         <param name="dropdownColSpan" default="1" />
         <param name="active" default="true" />
         <param name="handle" default="null" />
+        <param name="mouseOverText" default="''" />
       </params>
       <actions>
         <do_if value="@$id != null and @$options != null and $currentIndex? and $col? and $textColSpan? and @$text != null and $dropdownColSpan?">
@@ -194,6 +200,7 @@
               $colSpan = @$textColSpan,
               $halign = 'left',
               $text = @$text,
+              $mouseOverText = @$mouseOverText,
             ]" />
           <signal_cue_instantly cue="md.Simple_Menu_API.Make_Dropdown"
             param="table[
@@ -202,6 +209,7 @@
               $colSpan = @$dropdownColSpan,
               $options = @$options,
               $startOption = @$currentIndex,
+              $mouseOverText = @$mouseOverText,
               $active = @$active,
               $onDropDownConfirmed = @$handle,
               $echo = table[
@@ -228,6 +236,7 @@
         data     - table holding the current numeric value at key '$<id>'
         readOnly - bool, whether the slider is read-only / display-only (default false)
         handle   - cue to signal on slider confirm; echo contains $valueId
+        mouseOverText - text or text DB reference shown on mouse over the label and the slider (default '')
 
       Handler echo fields:
         event.param.$echo.$valueId  - table key string (e.g. '$mySlider')
@@ -246,7 +255,7 @@
           <param name="handle" value="My_Handle_Cue" />
         </run_actions>
     -->
-    <library name="Add_Slider" purpose="run_actions" version="2">
+    <library name="Add_Slider" purpose="run_actions" version="3">
       <params>
         <param name="id" />
         <param name="text" default="''" />
@@ -259,6 +268,7 @@
         <param name="data" />
         <param name="readOnly" default="false" />
         <param name="handle" default="null" />
+        <param name="mouseOverText" default="''" />
       </params>
       <actions>
         <do_if value="@$id != null and $min? and $max? and $step? and @$data != null">
@@ -275,6 +285,7 @@
               $colSpan = if @$textColSpan != null then @$textColSpan else @$colSpan,
               $halign = 'left',
               $text = @$text,
+              $mouseOverText = @$mouseOverText,
             ]" />
           <do_if value="@$textColSpan == null">
             <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" />
@@ -290,6 +301,7 @@
               $start = @$data.{@$valueId},
               $suffix = @$suffix,
               $readOnly = @$readOnly,
+              $mouseOverText = @$mouseOverText,
               $onSliderCellConfirm = @$handle,
               $echo = table[
                 $valueId = @$valueId
@@ -316,6 +328,7 @@
         buttonColor     - color of the button (default null)
         active          - bool, whether the widget is interactive (default true)
         handle          - cue to signal on option confirm; echo contains $valueId
+        mouseOverText   - text or text DB reference shown on mouse over the label and the button (default '')
 
       Handler echo fields:
         event.param.$echo.$valueId  - table key string (e.g. '$myOption')
@@ -336,7 +349,7 @@
           <param name="handle" value="My_Handle_Cue" />
         </run_actions>
     -->
-    <library name="Add_Button" purpose="run_actions">
+    <library name="Add_Button" purpose="run_actions" version="2">
       <params>
         <param name="id" />
         <param name="col" default="1" />
@@ -348,6 +361,7 @@
         <param name="buttonColor" default="null" />
         <param name="active" default="true" />
         <param name="handle" default="null" />
+        <param name="mouseOverText" default="''" />
       </params>
       <actions>
         <do_if value="@$id != null and $col? and $textColSpan? and @$text != null and $buttonColSpan? and @$buttonText != null">
@@ -361,6 +375,7 @@
               $colSpan = @$textColSpan,
               $halign = 'left',
               $text = @$text,
+              $mouseOverText = @$mouseOverText,
             ]" />
           <signal_cue_instantly cue="md.Simple_Menu_API.Make_Button"
             param="table[
@@ -372,6 +387,7 @@
                 $halign = @$buttonAlign,
                 $color = @$buttonColor
               ],
+              $mouseOverText = @$mouseOverText,
               $active = @$active,
               $onClick = @$handle,
               $echo = table[
@@ -397,6 +413,7 @@
         maxChars     - maximum number of characters (default 50)
         active       - bool, whether the widget is interactive (default true)
         handle       - cue to signal when the box is deselected; echo contains $valueId
+        mouseOverText - text or text DB reference shown on mouse over the label and the edit box (default '')
 
       Handler echo fields:
         event.param.$echo.$valueId  - table key string (e.g. '$myText')
@@ -415,7 +432,7 @@
           <param name="handle" value="My_Handle_Cue" />
         </run_actions>
     -->
-    <library name="Add_EditBox" purpose="run_actions">
+    <library name="Add_EditBox" purpose="run_actions" version="2">
       <params>
         <param name="id" />
         <param name="col" default="1" />
@@ -427,6 +444,7 @@
         <param name="maxChars" default="50" />
         <param name="active" default="true" />
         <param name="handle" default="null" />
+        <param name="mouseOverText" default="''" />
       </params>
       <actions>
         <do_if value="@$id != null and $col? and $textColSpan? and @$text != null and $boxColSpan? and @$data != null">
@@ -440,6 +458,7 @@
               $colSpan = @$textColSpan,
               $halign = 'left',
               $text = @$text,
+              $mouseOverText = @$mouseOverText,
             ]" />
           <signal_cue_instantly cue="md.Simple_Menu_API.Make_EditBox"
             param="table[
@@ -452,6 +471,7 @@
               ],
               $defaultText = @$defaultText,
               $maxChars = @$maxChars,
+              $mouseOverText = @$mouseOverText,
               $active = @$active,
               $onEditBoxDeactivated = @$handle,
               $echo = table[

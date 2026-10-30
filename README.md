@@ -58,6 +58,7 @@ Adds a checkbox widget with a text label to its right. Automatically starts a ne
 - `data` *(required)* - Table holding the current value at key `$<id>`
 - `active` *(default: `true`)* - Whether the widget is interactive
 - `handle` *(default: `null`)* - Cue to signal on click
+- `mouseOverText` *(default: `''`)* - Text or text DB reference shown on mouse over the label and the checkbox
 
 **Handler echo fields:**
 
@@ -88,6 +89,7 @@ Adds a label text cell followed by a dropdown widget on the same row. Automatica
 - `dropdownColSpan` *(default: `1`)* - Column span for the dropdown widget
 - `active` *(default: `true`)* - Whether the widget is interactive
 - `handle` *(default: `null`)* - Cue to signal on option confirm
+- `mouseOverText` *(default: `''`)* - Text or text DB reference shown on mouse over the label and the dropdown
 
 **Handler echo fields:**
 
@@ -122,6 +124,7 @@ Adds a non-selectable label row followed by a slider widget row. Always creates 
 - `data` *(required)* - Table holding the current value at key `$<id>`
 - `readOnly` *(default: `false`)* - Whether the slider is display-only
 - `handle` *(default: `null`)* - Cue to signal on slider confirm
+- `mouseOverText` *(default: `''`)* - Text or text DB reference shown on mouse over the label and the slider
 
 **Handler echo fields:**
 
@@ -156,6 +159,7 @@ Adds a label text cell followed by a button widget on the same row. Automaticall
 - `buttonColor` *(default: `null`)* - Color of the button text (engine default when `null`)
 - `active` *(default: `true`)* - Whether the widget is interactive
 - `handle` *(default: `null`)* - Cue to signal on button click
+- `mouseOverText` *(default: `''`)* - Text or text DB reference shown on mouse over the label and the button
 
 **Handler echo fields:**
 
@@ -187,6 +191,7 @@ Adds a label text cell followed by a text edit box on the same row. Automaticall
 - `maxChars` *(default: `50`)* - Maximum number of characters
 - `active` *(default: `true`)* - Whether the widget is interactive
 - `handle` *(default: `null`)* - Cue to signal when the box is deselected
+- `mouseOverText` *(default: `''`)* - Text or text DB reference shown on mouse over the label and the edit box
 
 **Handler echo fields:**
 
