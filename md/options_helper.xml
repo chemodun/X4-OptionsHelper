@@ -236,7 +236,7 @@
         suffix   - string appended to the displayed current value (default '')
         colSpan  - column span for both the label and slider cells (default 1)
         textColSpan - column span for the label text cell (default null, i.e. same as colSpan)
-        data     - table holding the current numeric value at key '$<id>'
+        data     - table holding the current numeric value at key '$<id>'; a value outside min..max starts the slider at the nearest limit
         readOnly - bool, whether the slider is read-only / display-only (default false)
         handle   - cue to signal on slider confirm; echo contains $valueId
         mouseOverText - text or text DB reference shown on mouse over the label and the slider (default '')
@@ -258,7 +258,7 @@
           <param name="handle" value="My_Handle_Cue" />
         </run_actions>
     -->
-    <library name="Add_Slider" purpose="run_actions" version="3">
+    <library name="Add_Slider" purpose="run_actions" version="4">
       <params>
         <param name="id" />
         <param name="text" default="''" />
@@ -276,6 +276,16 @@
       <actions>
         <do_if value="@$id != null and $min? and $max? and $step? and @$data != null">
           <set_value name="$valueId" exact="'$%s' . [@$id]" />
+          <!-- the engine fails the whole frame on a start value outside min..max -->
+          <set_value name="$start" exact="@$data.{@$valueId}" />
+          <do_if value="typeof $start != datatype.null">
+            <do_if value="$start lt $min">
+              <set_value name="$start" exact="$min" />
+            </do_if>
+            <do_elseif value="$start gt $max">
+              <set_value name="$start" exact="$max" />
+            </do_elseif>
+          </do_if>
           <do_if value="@$textColSpan == null">
             <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" param="table[$selectable = false]" />
           </do_if>
@@ -301,7 +311,7 @@
               $min = @$min,
               $max = @$max,
               $step = @$step,
-              $start = @$data.{@$valueId},
+              $start = @$start,
               $suffix = @$suffix,
               $readOnly = @$readOnly,
               $mouseOverText = @$mouseOverText,

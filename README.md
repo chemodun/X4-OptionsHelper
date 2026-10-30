@@ -122,7 +122,7 @@ Adds a non-selectable label row followed by a slider widget row. Always creates 
 - `max` *(default: `100`)* - Maximum slider value
 - `step` *(default: `1`)* - Step increment between slider positions
 - `suffix` *(default: `''`)* - String appended to the displayed current value
-- `data` *(required)* - Table holding the current value at key `$<id>`
+- `data` *(required)* - Table holding the current value at key `$<id>`. A value outside `min`..`max` starts the slider at the nearest limit; the stored value changes only when the player moves the slider
 - `readOnly` *(default: `false`)* - Whether the slider is display-only
 - `handle` *(default: `null`)* - Cue to signal on slider confirm
 - `mouseOverText` *(default: `''`)* - Text or text DB reference shown on mouse over the label and the slider
@@ -363,6 +363,10 @@ Reads `event.param.$echo.$valueId` and `event.param.$text`, writes the text into
 - [SirNukes](https://next.nexusmods.com/profile/sirnukes?gameId=2659) - for the `Mod Support APIs` that power the UI hooks.
 
 ## Changelog
+
+### [1.32] - 2026-10-30
+
+- `Add_Slider`: a saved value outside `min`..`max` no longer breaks the whole options page.
 
 ### [1.31] - 2026-10-30
 

@@ -3,12 +3,12 @@
   id="ws_3715253556"
   name="Options Helper"
   author="Chem O`Dun"
-  version="131"
+  version="132"
   date="2026-10-30"
   save="false"
   sync="false"
   enabled="1"
-  lastupdate="1793383835"
+  lastupdate="1793384695"
   description="Helper library for building SirNukes Simple_Menu_API options menus. Provides reusable MD libraries for checkboxes, dropdowns, sliders, buttons, edit boxes and section title rows.">
   <dependency version="800"></dependency>
   <dependency id="ws_2042901274" optional="false" name="SirNukes Mod Support APIs" version="195"></dependency>
